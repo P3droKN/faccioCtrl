@@ -1,0 +1,91 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            Int       @id @default(autoincrement())
+  email         String    @unique
+  password      String?
+  nome          String
+  nomeConfeccao String?
+  whatsapp      String?
+  avatarUrl     String?
+  plano         String    @default("pendente")
+  subscriptionId String?
+  nextPayment   DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  faccoes       Faccao[]
+  ordens        Ordem[]
+  accessTokens  AccessToken[]
+  resetTokens   PasswordResetToken[]
+}
+
+model AccessToken {
+  id        Int      @id @default(autoincrement())
+  token     String   @unique
+  userId    Int      @map("user_id")
+  user      User     @relation(fields: [userId], references: [id])
+  used      Boolean  @default(false)
+  expiresAt DateTime @map("expires_at")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("access_tokens")
+}
+
+model PasswordResetToken {
+  id        Int      @id @default(autoincrement())
+  token     String   @unique
+  userId    Int      @map("user_id")
+  user      User     @relation(fields: [userId], references: [id])
+  used      Boolean  @default(false)
+  expiresAt DateTime @map("expires_at")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("password_reset_tokens")
+}
+
+model Faccao {
+  id        Int      @id @default(autoincrement())
+  codigo    String
+  nome      String
+  contato   String?
+  ativo     Boolean  @default(true)
+  
+  userId    Int      @map("user_id")
+  user      User     @relation(fields: [userId], references: [id])
+  
+  ordens    Ordem[]
+  
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@unique([userId, codigo])
+  @@map("faccoes")
+}
+
+model Ordem {
+  id            Int      @id @default(autoincrement())
+  numeroOrdem   String   @map("numero_ordem")
+  produto       String
+  dataEnvio     DateTime @map("data_envio") @db.Date
+  prazoAcordado DateTime @map("prazo_acordado") @db.Date
+  qtdEnviada    Int      @map("qtd_enviada")
+  qtdRetornada  Int      @default(0) @map("qtd_retornada")
+  observacao    String?  @db.Text
+  userId        Int      @map("user_id")
+  user          User     @relation(fields: [userId], references: [id])
+  faccaoId      Int      @map("faccao_id")
+  faccao        Faccao   @relation(fields: [faccaoId], references: [id])
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  @@unique([userId, numeroOrdem])
+  @@index([faccaoId])
+  @@map("ordens_producao")
+}
