@@ -5,6 +5,8 @@ import { decrypt, encrypt } from '@/app/actions/auth';
 
 const prisma = new PrismaClient();
 
+export const dynamic = 'force-dynamic';
+
 export async function GET() {
   try {
     const cookieStore = await cookies();
