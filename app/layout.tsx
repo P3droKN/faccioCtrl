@@ -33,25 +33,30 @@ export default function RootLayout({
       lang="pt-BR"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">
-        {children}
-        <PwaBanner />
+      <head>
         <script
           dangerouslySetInnerHTML={{
             __html: `
               window.addEventListener('beforeinstallprompt', function(e) {
                 e.preventDefault();
                 window.deferredPwaPrompt = e;
+                console.log('[PWA] beforeinstallprompt capturado!');
               });
 
               if ('serviceWorker' in navigator) {
-                window.addEventListener('load', function() {
-                  navigator.serviceWorker.register('/sw.js');
+                navigator.serviceWorker.register('/sw.js').then(function(reg) {
+                  console.log('[PWA] Service Worker registrado:', reg.scope);
+                }).catch(function(err) {
+                  console.error('[PWA] Erro ao registrar SW:', err);
                 });
               }
             `,
           }}
         />
+      </head>
+      <body className="min-h-full flex flex-col">
+        {children}
+        <PwaBanner />
       </body>
     </html>
   );

@@ -8,23 +8,37 @@ export default function PwaBanner() {
   const [showBanner, setShowBanner] = useState(false);
 
   useEffect(() => {
-    // Verifica se o evento foi disparado antes do React montar
+    // Verifica se o evento já foi capturado pelo script no head
     if (typeof window !== 'undefined' && (window as any).deferredPwaPrompt) {
       setDeferredPrompt((window as any).deferredPwaPrompt);
       setShowBanner(true);
     }
 
+    // Listener direto caso o evento chegue depois
     const handler = (e: any) => {
       e.preventDefault();
       (window as any).deferredPwaPrompt = e;
       setDeferredPrompt(e);
       setShowBanner(true);
     };
-
     window.addEventListener('beforeinstallprompt', handler);
+
+    // Polling: o evento pode chegar entre o script do head e o React montar
+    const interval = setInterval(() => {
+      if ((window as any).deferredPwaPrompt) {
+        setDeferredPrompt((window as any).deferredPwaPrompt);
+        setShowBanner(true);
+        clearInterval(interval);
+      }
+    }, 1000);
+
+    // Limpar após 15 segundos se não disparou
+    const timeout = setTimeout(() => clearInterval(interval), 15000);
 
     return () => {
       window.removeEventListener('beforeinstallprompt', handler);
+      clearInterval(interval);
+      clearTimeout(timeout);
     };
   }, []);
 

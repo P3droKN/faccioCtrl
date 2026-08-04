@@ -1,3 +1,13 @@
+const CACHE_NAME = 'faccioctrl-v1';
+
+self.addEventListener('install', function(event) {
+  self.skipWaiting();
+});
+
+self.addEventListener('activate', function(event) {
+  event.waitUntil(clients.claim());
+});
+
 self.addEventListener('fetch', function(event) {
-  // Esse listener vazio é suficiente para satisfazer os requisitos do navegador para PWA
+  event.respondWith(fetch(event.request));
 });
