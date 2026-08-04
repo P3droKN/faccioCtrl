@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { ShieldAlert, Users, Crown, Download, Loader2, LogOut } from 'lucide-react';
+import { ShieldAlert, Users, Crown, Download, Loader2, LogOut, Eye, EyeOff } from 'lucide-react';
 import { loginAdmin, getAdminData, logoutAdmin } from '@/app/actions/admin';
 
 type UserData = {
@@ -18,6 +18,7 @@ export default function AdminPage() {
   const [loading, setLoading] = useState(true);
   const [authorized, setAuthorized] = useState(false);
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   
   const [users, setUsers] = useState<UserData[]>([]);
@@ -117,15 +118,22 @@ export default function AdminPage() {
           <p className="text-center text-gray-500 mb-8 text-sm">Acesso restrito. Insira a senha mestra.</p>
 
           <form onSubmit={handleLogin} className="space-y-4">
-            <div>
+            <div className="relative">
               <input
-                type="password"
+                type={showPassword ? 'text' : 'password'}
                 placeholder="Senha de Administrador"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 outline-none transition-all"
+                className="w-full px-4 py-3 rounded-xl border border-gray-300 bg-gray-50 text-gray-900 focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none transition-all pr-12 font-medium"
                 required
               />
+              <button 
+                type="button" 
+                onClick={() => setShowPassword(!showPassword)} 
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+              >
+                {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+              </button>
             </div>
             {error && <p className="text-red-500 text-sm font-semibold text-center">{error}</p>}
             <button
