@@ -1,6 +1,7 @@
 {
   "name": "FaccioCtrl - Controle de Facções",
   "short_name": "FaccioCtrl",
+  "start_url": "/",
   "display": "standalone",
   "theme_color": "#1F3864",
   "background_color": "#1F3864",
