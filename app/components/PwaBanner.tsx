@@ -47,28 +47,29 @@ export default function PwaBanner() {
   if (!showBanner) return null;
 
   return (
-    <div className="hidden lg:flex fixed bottom-6 right-6 z-50 animate-in slide-in-from-bottom-5 fade-in duration-300">
-      <div className="bg-white rounded-2xl shadow-2xl border border-gray-100 p-5 flex items-center gap-5 w-[420px]">
-        <div className="w-12 h-12 bg-[#1F3864] rounded-xl flex items-center justify-center shrink-0 shadow-inner">
-          <Scissors className="w-6 h-6 text-white" />
-        </div>
-        
-        <div className="flex-1">
-          <h4 className="text-gray-900 font-bold text-sm">FaccioCtrl</h4>
-          <p className="text-gray-500 text-xs mt-0.5 leading-snug">Instale o FaccioCtrl no seu computador para acesso rápido.</p>
+    <div className="hidden lg:flex fixed bottom-0 left-0 right-0 z-40 bg-[#1F3864] text-white border-t border-blue-900 shadow-2xl py-4 px-6 animate-in slide-in-from-bottom-5">
+      <div className="max-w-7xl mx-auto w-full flex items-center justify-between">
+        <div className="flex items-center gap-4">
+          <div className="w-10 h-10 bg-white/10 rounded-xl flex items-center justify-center shrink-0 border border-white/20">
+            <Scissors className="w-5 h-5 text-blue-300" />
+          </div>
+          <div>
+            <h4 className="font-bold text-sm">Acesse pelo computador e instale o FaccioCtrl como aplicativo</h4>
+            <p className="text-white/70 text-xs">Tenha acesso mais rápido e controle suas facções direto da área de trabalho.</p>
+          </div>
         </div>
 
-        <div className="flex items-center gap-2 shrink-0">
+        <div className="flex items-center gap-4 shrink-0">
           <button 
             onClick={handleInstall}
-            className="flex items-center justify-center w-10 h-10 bg-blue-50 text-blue-600 rounded-full hover:bg-blue-100 transition-colors"
-            title="Instalar agora"
+            className="flex items-center gap-2 px-5 py-2.5 bg-white text-[#1F3864] font-bold text-sm rounded-lg hover:bg-gray-100 transition-colors shadow-lg"
           >
             <Download className="w-4 h-4" />
+            Instalar agora
           </button>
           <button 
             onClick={() => setShowBanner(false)}
-            className="flex items-center justify-center w-10 h-10 text-gray-400 hover:text-gray-600 hover:bg-gray-50 rounded-full transition-colors"
+            className="flex items-center justify-center w-8 h-8 text-white/50 hover:text-white hover:bg-white/10 rounded-full transition-colors"
             title="Fechar"
           >
             <X className="w-4 h-4" />
