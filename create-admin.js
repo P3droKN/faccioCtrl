@@ -4,46 +4,46 @@ const bcrypt = require('bcryptjs');
 const prisma = new PrismaClient();
 
 async function createAdmin() {
-  const email = process.argv[2];
-  const password = process.argv[3];
-
-  if (!email || !password) {
-    console.error('❌ Erro: Faltam argumentos.');
-    console.log('Uso: node create-admin.js <email> <senha>');
-    console.log('Exemplo: node create-admin.js admin@example.com senha123');
+  const args = process.argv.slice(2);
+  
+  if (args.length < 2) {
+    console.error('❌ Uso incorreto. Você deve passar o e-mail e a senha como parâmetros.');
+    console.log('Exemplo: node create-admin.js seuemail@gmail.com suasenha123');
     process.exit(1);
   }
 
+  const [email, password] = args;
+
   try {
-    console.log(`⏳ Criando/atualizando usuário para o e-mail: ${email}...`);
+    console.log(`Buscando ou criando administrador com e-mail: ${email}...`);
     
-    // Gera o hash da senha
     const hashedPassword = await bcrypt.hash(password, 10);
-    
-    // O upsert cria o usuário se não existir, ou atualiza se já existir
+
     const user = await prisma.user.upsert({
       where: { email },
       update: {
-        plano: 'pro',
         password: hashedPassword,
-        nomeConfeccao: 'Admin',
+        plano: 'pro',
       },
       create: {
         email,
-        nome: 'Admin',
-        plano: 'pro',
         password: hashedPassword,
-        nomeConfeccao: 'Admin',
-      }
+        nome: 'Administrador FaccioCtrl',
+        nomeConfeccao: 'FaccioCtrl Admin',
+        plano: 'pro',
+      },
     });
 
-    console.log('✅ Usuário administrador criado/atualizado com sucesso!');
-    console.log(`- ID: ${user.id}`);
-    console.log(`- Email: ${user.email}`);
-    console.log(`- Plano: ${user.plano}`);
-    
+    console.log('\n✅ Administrador configurado com sucesso!');
+    console.log('--------------------------------------------------');
+    console.log(`ID: ${user.id}`);
+    console.log(`E-mail: ${user.email}`);
+    console.log(`Plano: ${user.plano}`);
+    console.log('--------------------------------------------------');
+    console.log('Você já pode fazer login na plataforma.');
+
   } catch (error) {
-    console.error('❌ Erro ao criar admin:', error);
+    console.error('\n❌ Erro ao criar o administrador:', error);
   } finally {
     await prisma.$disconnect();
   }
