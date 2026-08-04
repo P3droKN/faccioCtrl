@@ -8,12 +8,16 @@ export default function PwaBanner() {
   const [showBanner, setShowBanner] = useState(false);
 
   useEffect(() => {
+    // Verifica se o evento foi disparado antes do React montar
+    if (typeof window !== 'undefined' && (window as any).deferredPwaPrompt) {
+      setDeferredPrompt((window as any).deferredPwaPrompt);
+      setShowBanner(true);
+    }
+
     const handler = (e: any) => {
-      // Prevent the mini-infobar from appearing on mobile
       e.preventDefault();
-      // Stash the event so it can be triggered later.
+      (window as any).deferredPwaPrompt = e;
       setDeferredPrompt(e);
-      // Show the banner
       setShowBanner(true);
     };
 
