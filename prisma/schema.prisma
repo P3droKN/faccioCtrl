@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -11,25 +8,24 @@ datasource db {
 }
 
 model User {
-  id                         Int       @id @default(autoincrement())
+  id                         Int                  @id @default(autoincrement())
+  email                      String               @unique
+  password                   String?
   nome                       String
-  email                      String    @unique
-  nomeConfeccao              String?   @map("nome_confeccao")
-  password                   String?   @map("senha")
-  plano                      String    @default("free")
-  createdAt                  DateTime  @default(now()) @map("created_at")
+  nomeConfeccao              String?
+  whatsapp                   String?
+  avatarUrl                  String?
+  plano                      String               @default("pendente")
   subscriptionId             String?
   nextPayment                DateTime?
-  avatarUrl                  String?
   configuracaoExpressaStatus String?
   configuracaoExpressaData   DateTime?
-
-  accessTokens        AccessToken[]
-  passwordResetTokens PasswordResetToken[]
-  faccoes             Faccao[]
-  ordens              Ordem[]
-
-  @@map("User")
+  createdAt                  DateTime             @default(now())
+  updatedAt                  DateTime             @updatedAt
+  accessTokens               AccessToken[]
+  faccoes                    Faccao[]
+  ordens                     Ordem[]
+  resetTokens                PasswordResetToken[]
 }
 
 model AccessToken {
@@ -39,10 +35,9 @@ model AccessToken {
   used      Boolean  @default(false)
   expiresAt DateTime @map("expires_at")
   createdAt DateTime @default(now()) @map("created_at")
+  user      User     @relation(fields: [userId], references: [id])
 
-  user User @relation(fields: [userId], references: [id])
-
-  @@map("AccessToken")
+  @@map("access_tokens")
 }
 
 model PasswordResetToken {
@@ -52,46 +47,44 @@ model PasswordResetToken {
   used      Boolean  @default(false)
   expiresAt DateTime @map("expires_at")
   createdAt DateTime @default(now()) @map("created_at")
+  user      User     @relation(fields: [userId], references: [id])
 
-  user User @relation(fields: [userId], references: [id])
-
-  @@map("PasswordResetToken")
+  @@map("password_reset_tokens")
 }
 
 model Faccao {
   id        Int      @id @default(autoincrement())
-  userId    Int      @map("user_id")
   codigo    String
   nome      String
   contato   String?
   ativo     Boolean  @default(true)
+  userId    Int      @map("user_id")
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
-
-  user   User    @relation(fields: [userId], references: [id])
-  ordens Ordem[]
+  user      User     @relation(fields: [userId], references: [id])
+  ordens    Ordem[]
 
   @@unique([userId, codigo])
-  @@map("Faccao")
+  @@map("faccoes")
 }
 
 model Ordem {
-  id             Int      @id @default(autoincrement())
-  userId         Int      @map("user_id")
-  faccaoId       Int      @map("faccao_id")
-  numeroOrdem    String   @map("numero_ordem")
-  produto        String
-  dataEnvio      DateTime @map("data_envio")
-  prazoAcordado  DateTime @map("prazo_acordado")
-  qtdEnviada     Int      @map("qtd_enviada")
-  qtdRetornada   Int      @default(0) @map("qtd_retornada")
-  observacao     String?
-  createdAt      DateTime @default(now()) @map("created_at")
-  updatedAt      DateTime @updatedAt @map("updated_at")
-
-  user   User   @relation(fields: [userId], references: [id])
-  faccao Faccao @relation(fields: [faccaoId], references: [id])
+  id            Int      @id @default(autoincrement())
+  numeroOrdem   String   @map("numero_ordem")
+  produto       String
+  dataEnvio     DateTime @map("data_envio") @db.Date
+  prazoAcordado DateTime @map("prazo_acordado") @db.Date
+  qtdEnviada    Int      @map("qtd_enviada")
+  qtdRetornada  Int      @default(0) @map("qtd_retornada")
+  observacao    String?
+  userId        Int      @map("user_id")
+  faccaoId      Int      @map("faccao_id")
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+  faccao        Faccao   @relation(fields: [faccaoId], references: [id])
+  user          User     @relation(fields: [userId], references: [id])
 
   @@unique([userId, numeroOrdem])
-  @@map("Ordem")
+  @@index([faccaoId])
+  @@map("ordens_producao")
 }

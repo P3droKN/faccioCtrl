@@ -8,22 +8,24 @@ datasource db {
 }
 
 model User {
-  id             Int                  @id @default(autoincrement())
-  email          String               @unique
-  password       String?
-  nome           String
-  nomeConfeccao  String?
-  whatsapp       String?
-  avatarUrl      String?
-  plano          String               @default("pendente")
-  subscriptionId String?
-  nextPayment    DateTime?
-  createdAt      DateTime             @default(now())
-  updatedAt      DateTime             @updatedAt
-  accessTokens   AccessToken[]
-  faccoes        Faccao[]
-  ordens         Ordem[]
-  resetTokens    PasswordResetToken[]
+  id                         Int                  @id @default(autoincrement())
+  email                      String               @unique
+  password                   String?
+  nome                       String
+  nomeConfeccao              String?
+  whatsapp                   String?
+  avatarUrl                  String?
+  plano                      String               @default("pendente")
+  subscriptionId             String?
+  nextPayment                DateTime?
+  configuracaoExpressaStatus String?
+  configuracaoExpressaData   DateTime?
+  createdAt                  DateTime             @default(now())
+  updatedAt                  DateTime             @updatedAt
+  accessTokens               AccessToken[]
+  faccoes                    Faccao[]
+  ordens                     Ordem[]
+  resetTokens                PasswordResetToken[]
 }
 
 model AccessToken {
