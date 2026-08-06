@@ -23,9 +23,9 @@ export default function Mentoria30DiasUpsell() {
               <Users className="w-10 h-10" />
             </div>
             <div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">Acompanhamento por WhatsApp</h3>
+              <h3 className="text-xl font-bold text-gray-900 mb-2">Acompanhamento por Telegram</h3>
               <p className="text-gray-600 leading-relaxed">
-                O maior risco de qualquer sistema novo é você instalar e largar na segunda semana. Eu quero que isso não aconteça. Por isso criei a Mentoria de 30 Dias: vou acompanhar você pessoalmente por WhatsApp durante o primeiro mês — check-in toda semana, dicas baseadas no SEU uso, e um plano para o próximo mês no final. Sem chamada, sem compromisso de horário. Você responde quando puder, eu respondo com análise personalizada.
+                O maior risco de qualquer sistema novo é você instalar e largar na segunda semana. Eu quero que isso não aconteça. Por isso criei a Mentoria de 30 Dias: vou acompanhar você pessoalmente por Telegram durante o primeiro mês — check-in toda semana, dicas baseadas no SEU uso, e um plano para o próximo mês no final. Sem chamada, sem compromisso de horário. Você responde quando puder, eu respondo com análise personalizada.
               </p>
             </div>
           </div>

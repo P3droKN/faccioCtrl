@@ -425,3 +425,100 @@ export async function sendMentoriaEmail(nomeCliente: string, emailCliente: strin
     return false;
   }
 }
+
+export async function sendMentoriaCustomerEmail(to: string, nomeCliente: string) {
+  const SMTP_HOST = process.env.SMTP_HOST?.trim();
+  const SMTP_PORT = process.env.SMTP_PORT?.trim();
+  const SMTP_USER = process.env.SMTP_USER?.trim();
+  const SMTP_PASS = process.env.SMTP_PASS?.trim();
+  const TELEGRAM_LINK = process.env.TELEGRAM_LINK?.trim() || 'https://t.me/';
+
+  if (!SMTP_HOST || !SMTP_USER || !SMTP_PASS) {
+    console.error('SMTP credentials missing in .env');
+    return false;
+  }
+
+  const isGmail = SMTP_HOST?.includes('gmail');
+
+  const transporter = nodemailer.createTransport(
+    isGmail 
+      ? {
+          service: 'gmail',
+          auth: {
+            user: SMTP_USER,
+            pass: SMTP_PASS,
+          },
+        }
+      : {
+          host: SMTP_HOST,
+          port: Number(SMTP_PORT) || 465,
+          secure: Number(SMTP_PORT) === 465,
+          auth: {
+            user: SMTP_USER,
+            pass: SMTP_PASS,
+          },
+          tls: {
+            rejectUnauthorized: false
+          }
+        }
+  );
+
+  const firstName = nomeCliente ? nomeCliente.split(' ')[0] : 'Empreendedor';
+
+  const html = `
+    <div style="font-family: 'Inter', sans-serif; background-color: #f3f4f6; margin: 0; padding: 40px 20px;">
+      <div style="max-w: 600px; margin: 0 auto; background-color: #ffffff; padding: 40px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+        
+        <div style="text-align: center; margin-bottom: 24px;">
+          <h1 style="color: #111827; margin-top: 0;">Bem-vindo à Mentoria! 🎓</h1>
+        </div>
+        
+        <p style="color: #4b5563; font-size: 16px; line-height: 1.6;">
+          Olá, <strong>${firstName}</strong>!
+        </p>
+        <p style="color: #4b5563; font-size: 16px; line-height: 1.6;">
+          Você tomou uma excelente decisão ao garantir a <strong>Mentoria de 30 Dias</strong> do FaccioCtrl. 
+          Eu não vou deixar você instalar o sistema e abandonar na segunda semana.
+        </p>
+        
+        <p style="color: #4b5563; font-size: 16px; line-height: 1.6;">
+          Nós vamos nos falar toda semana. Para começarmos com o pé direito, <strong>eu preciso que você me chame no Telegram agora mesmo.</strong>
+        </p>
+
+        <div style="text-align: center; margin: 32px 0;">
+          <a href="${TELEGRAM_LINK}" style="display: inline-block; background-color: #0088cc; color: #ffffff; text-decoration: none; font-weight: bold; padding: 16px 32px; border-radius: 8px; font-size: 18px;">
+            ACESSAR O TELEGRAM
+          </a>
+        </div>
+        
+        <p style="color: #4b5563; font-size: 16px; line-height: 1.6;">
+          Me manda um "Oi" por lá para eu salvar o seu contato. O nosso primeiro check-in de mentoria será na próxima segunda-feira.
+        </p>
+        
+        <p style="color: #4b5563; font-size: 16px; line-height: 1.6; margin-top: 32px;">
+          Estou te esperando lá!
+          <br><br>
+          Um abraço,
+          <br>
+          <strong>Equipe FaccioCtrl</strong>
+        </p>
+        
+      </div>
+    </div>
+  `;
+
+  try {
+    const info = await transporter.sendMail({
+      from: `"FaccioCtrl" <${SMTP_USER}>`,
+      to,
+      subject: '🎓 Mentoria FaccioCtrl: Próximo Passo',
+      html,
+    });
+
+    console.log('Customer Mentoria Message sent: %s', info.messageId);
+    return true;
+  } catch (err) {
+    console.error('Error sending customer mentoria email:', err);
+    return false;
+  }
+}

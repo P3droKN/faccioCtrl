@@ -132,8 +132,18 @@ export default async function DashboardLayout({ children }: { children: React.Re
 
       {/* Banner de Mentoria 30 Dias */}
       {showMentoriaBanner && (
-        <div className="bg-green-600 text-white px-4 py-2 text-center text-sm font-medium shadow-sm flex items-center justify-center gap-2">
-          <span>🎓</span> Sua Mentoria de 30 Dias está ativa — check-in {mentoriaCheckins} de 4 realizados.
+        <div className="bg-green-600 text-white px-4 py-3 text-center text-sm font-medium shadow-sm flex flex-col sm:flex-row items-center justify-center gap-3">
+          <div className="flex items-center gap-2">
+            <span>🎓</span> Sua Mentoria de 30 Dias está ativa — check-in {mentoriaCheckins} de 4 realizados.
+          </div>
+          <a 
+            href={process.env.TELEGRAM_LINK || "https://t.me/"} 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="bg-white text-green-700 px-3 py-1 rounded shadow-sm hover:bg-green-50 transition-colors font-bold whitespace-nowrap"
+          >
+            Acessar Telegram
+          </a>
         </div>
       )}
 

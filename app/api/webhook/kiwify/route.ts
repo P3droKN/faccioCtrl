@@ -102,12 +102,17 @@ export async function POST(req: Request) {
           },
         });
         
-        const { sendMentoriaEmail } = require('@/lib/utils/mailer');
+        const { sendMentoriaEmail, sendMentoriaCustomerEmail } = require('@/lib/utils/mailer');
         
         await sendMentoriaEmail(
           payload.Customer?.full_name,
           email,
           payload.Customer?.mobile
+        );
+
+        await sendMentoriaCustomerEmail(
+          email,
+          payload.Customer?.full_name
         );
       }
       return NextResponse.json({ success: true }, { status: 200 });
