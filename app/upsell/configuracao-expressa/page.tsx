@@ -82,6 +82,14 @@ export default function ConfiguracaoExpressaUpsell() {
       </div>
 
       <script src="https://snippets.kiwify.com/upsell/upsell.min.js" async></script>
+      
+      {/* Força a cor do texto do dropdown (select) injetado pela Kiwify para ficar escuro e legível */}
+      <style dangerouslySetInnerHTML={{__html: `
+        select, option {
+          color: #111827 !important;
+          font-weight: 500 !important;
+        }
+      `}} />
     </div>
   );
 }
