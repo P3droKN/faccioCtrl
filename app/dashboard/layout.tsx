@@ -24,13 +24,15 @@ export default async function DashboardLayout({ children }: { children: React.Re
   const isPro = session.plano === 'pro';
 
   // Fetch complete user data to get avatarUrl and config status
-  const user = await prisma.user.findUnique({
+    const user = await prisma.user.findUnique({
     where: { id: session.id },
     select: { 
       avatarUrl: true, 
       nome: true,
       configuracaoExpressaStatus: true,
-      configuracaoExpressaData: true
+      configuracaoExpressaData: true,
+      mentoria30DiasStatus: true,
+      mentoria30DiasCheckins: true
     }
   });
 
@@ -49,6 +51,9 @@ export default async function DashboardLayout({ children }: { children: React.Re
       expressBannerMessage = `Sua Configuração Expressa está sendo preparada — prazo até ${formattedDeadline}.`;
     }
   }
+
+  const showMentoriaBanner = user?.mentoria30DiasStatus === 'ativa';
+  const mentoriaCheckins = user?.mentoria30DiasCheckins || 0;
 
   return (
     <div className="min-h-screen bg-gray-50 text-gray-900 font-sans flex flex-col">
@@ -122,6 +127,13 @@ export default async function DashboardLayout({ children }: { children: React.Re
       {showExpressBanner && (
         <div className="bg-blue-600 text-white px-4 py-2 text-center text-sm font-medium shadow-sm flex items-center justify-center gap-2 animate-pulse">
           <span>🚀</span> {expressBannerMessage}
+        </div>
+      )}
+
+      {/* Banner de Mentoria 30 Dias */}
+      {showMentoriaBanner && (
+        <div className="bg-green-600 text-white px-4 py-2 text-center text-sm font-medium shadow-sm flex items-center justify-center gap-2">
+          <span>🎓</span> Sua Mentoria de 30 Dias está ativa — check-in {mentoriaCheckins} de 4 realizados.
         </div>
       )}
 
