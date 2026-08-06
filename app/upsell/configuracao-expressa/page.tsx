@@ -49,21 +49,30 @@ export default function ConfiguracaoExpressaUpsell() {
           </div>
 
           {/* Pricing & CTA */}
-          <div className="pt-6 border-t border-gray-100 text-center">
+          <div 
+            className="pt-6 border-t border-gray-100 text-center"
+            id="kiwify-upsell-kBycMUu" 
+            data-upsell-url="" 
+            data-downsell-url=""
+          >
             <div className="mb-6">
               <span className="text-gray-500 uppercase tracking-wider text-sm font-semibold">Pagamento Único</span>
               <div className="text-5xl font-extrabold text-gray-900 mt-2">R$ 67<span className="text-2xl text-gray-500">,00</span></div>
             </div>
 
             <button 
-              id="kiwify-upsell-accept"
+              id="kiwify-upsell-trigger-kBycMUu"
               className="w-full bg-green-500 hover:bg-green-600 text-white font-bold text-lg py-4 rounded-xl shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-0.5"
             >
               Sim, quero a Configuração Expressa
             </button>
             
             <div className="mt-6">
-              <Link href="/dashboard" className="text-sm text-gray-400 hover:text-gray-600 underline underline-offset-4 transition-colors">
+              <Link 
+                href="/dashboard" 
+                id="kiwify-upsell-cancel-trigger-kBycMUu"
+                className="text-sm text-gray-400 hover:text-gray-600 underline underline-offset-4 transition-colors cursor-pointer"
+              >
                 Não, obrigado, prefiro configurar sozinho
               </Link>
             </div>
@@ -72,8 +81,7 @@ export default function ConfiguracaoExpressaUpsell() {
         </div>
       </div>
 
-      {/* COLAR AQUI O SNIPPET DE UPSELL GERADO PELA KIWIFY */}
-      {/* Exemplo: <script src="https://pay.kiwify.com.br/upsell.js"></script> */}
+      <script src="https://snippets.kiwify.com/upsell/upsell.min.js" async></script>
     </div>
   );
 }
