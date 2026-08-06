@@ -52,8 +52,8 @@ export default function ConfiguracaoExpressaUpsell() {
           <div 
             className="pt-6 border-t border-gray-100 text-center"
             id="kiwify-upsell-kBycMUu" 
-            data-upsell-url="https://faccioctrl.vercel.app/dashboard" 
-            data-downsell-url="https://faccioctrl.vercel.app/dashboard"
+            data-upsell-url="https://faccioctrl.vercel.app/upsell/mentoria-30-dias" 
+            data-downsell-url="https://faccioctrl.vercel.app/obrigado"
           >
             <div className="mb-6">
               <span className="text-gray-500 uppercase tracking-wider text-sm font-semibold">Pagamento Único</span>
@@ -69,7 +69,7 @@ export default function ConfiguracaoExpressaUpsell() {
             
             <div className="mt-6">
               <Link 
-                href="/dashboard" 
+                href="/obrigado" 
                 id="kiwify-upsell-cancel-trigger-kBycMUu"
                 className="text-sm text-gray-400 hover:text-gray-600 underline underline-offset-4 transition-colors cursor-pointer"
               >
