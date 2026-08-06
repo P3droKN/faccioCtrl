@@ -52,8 +52,8 @@ export default function ConfiguracaoExpressaUpsell() {
           <div 
             className="pt-6 border-t border-gray-100 text-center"
             id="kiwify-upsell-kBycMUu" 
-            data-upsell-url="" 
-            data-downsell-url=""
+            data-upsell-url="https://faccioctrl.vercel.app/dashboard" 
+            data-downsell-url="https://faccioctrl.vercel.app/dashboard"
           >
             <div className="mb-6">
               <span className="text-gray-500 uppercase tracking-wider text-sm font-semibold">Pagamento Único</span>
