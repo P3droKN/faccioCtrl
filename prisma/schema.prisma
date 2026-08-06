@@ -6,16 +6,21 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
 model User {
-  id             String   @id @default(uuid())
-  nome           String
-  email          String   @unique
-  nome_confeccao String?
-  senha          String?
-  plano          String   @default("free")
-  created_at     DateTime @default(now())
+  id                         String    @id @default(uuid())
+  nome                       String
+  email                      String    @unique
+  nome_confeccao             String?
+  senha                      String?
+  plano                      String    @default("free")
+  created_at                 DateTime  @default(now())
+  subscriptionId             String?
+  nextPayment                DateTime?
+  avatarUrl                  String?
+  configuracaoExpressaStatus String?
+  configuracaoExpressaData   DateTime?
 }

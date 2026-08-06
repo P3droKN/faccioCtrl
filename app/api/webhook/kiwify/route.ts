@@ -25,23 +25,56 @@ export async function POST(req: Request) {
     }
 
     let planoStatus: 'pro' | 'cancelado' | null = null;
+    let isExpressaConfig = false;
+
+    // Normalize product name to avoid mismatch
+    const productName = (payload.Product?.product_name || '').toLowerCase().trim();
+    if (productName === 'configuração expressa faccioctrl'.toLowerCase()) {
+      isExpressaConfig = true;
+    }
 
     // 2. Mapeamento dos Eventos
     switch (eventType) {
       case 'order_approved':
       case 'subscription_renewed':
-        planoStatus = 'pro';
+        if (!isExpressaConfig) {
+          planoStatus = 'pro';
+        }
         break;
 
       case 'order_rejected':
       case 'subscription_late':
       case 'subscription_canceled':
-        planoStatus = 'cancelado';
+        if (!isExpressaConfig) {
+          planoStatus = 'cancelado';
+        }
         break;
 
       default:
         // Ignora eventos que não são de assinatura/venda
         return NextResponse.json({ message: 'Event ignored' }, { status: 200 });
+    }
+
+    if (eventType === 'order_approved' && isExpressaConfig) {
+      const user = await prisma.user.findUnique({ where: { email } });
+      
+      if (user) {
+        await prisma.user.update({
+          where: { email },
+          data: {
+            configuracaoExpressaStatus: 'solicitada',
+            configuracaoExpressaData: new Date(),
+          },
+        });
+        
+        const { sendConfiguracaoExpressaEmail } = require('@/lib/utils/mailer');
+        await sendConfiguracaoExpressaEmail(
+          payload.Customer?.full_name,
+          email,
+          payload.Customer?.mobile
+        );
+      }
+      return NextResponse.json({ success: true }, { status: 200 });
     }
 
     if (planoStatus) {

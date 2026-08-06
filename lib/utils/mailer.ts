@@ -188,3 +188,73 @@ export async function sendPasswordResetEmail(to: string, token: string) {
     return false;
   }
 }
+
+export async function sendConfiguracaoExpressaEmail(nomeCliente: string, emailCliente: string, mobileCliente: string) {
+  const SMTP_HOST = process.env.SMTP_HOST?.trim();
+  const SMTP_PORT = process.env.SMTP_PORT?.trim();
+  const SMTP_USER = process.env.SMTP_USER?.trim();
+  const SMTP_PASS = process.env.SMTP_PASS?.trim();
+  const FOUNDER_EMAIL = process.env.FOUNDER_EMAIL?.trim() || SMTP_USER;
+
+  if (!SMTP_HOST || !SMTP_USER || !SMTP_PASS || !FOUNDER_EMAIL) {
+    console.error('SMTP credentials missing in .env');
+    return false;
+  }
+
+  const isGmail = SMTP_HOST?.includes('gmail');
+
+  const transporter = nodemailer.createTransport(
+    isGmail 
+      ? {
+          service: 'gmail',
+          auth: {
+            user: SMTP_USER,
+            pass: SMTP_PASS,
+          },
+        }
+      : {
+          host: SMTP_HOST,
+          port: Number(SMTP_PORT) || 465,
+          secure: Number(SMTP_PORT) === 465,
+          auth: {
+            user: SMTP_USER,
+            pass: SMTP_PASS,
+          },
+          tls: {
+            rejectUnauthorized: false
+          }
+        }
+  );
+
+  const html = `
+    <div style="font-family: 'Inter', sans-serif; background-color: #f3f4f6; margin: 0; padding: 40px 20px;">
+      <div style="max-w: 600px; margin: 0 auto; background-color: #ffffff; padding: 40px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+        <h2 style="color: #111827; margin-top: 0;">Nova Venda: Configuração Expressa 🚀</h2>
+        <p style="color: #4b5563; font-size: 16px;">O cliente abaixo acabou de comprar o Upsell de Configuração Expressa. Você tem 48h para realizar a entrega do serviço.</p>
+        
+        <div style="background-color: #f9fafb; padding: 20px; border-radius: 8px; margin: 24px 0;">
+          <p style="margin: 0 0 10px;"><strong>Nome:</strong> ${nomeCliente || 'Não informado'}</p>
+          <p style="margin: 0 0 10px;"><strong>E-mail:</strong> ${emailCliente || 'Não informado'}</p>
+          <p style="margin: 0;"><strong>WhatsApp:</strong> ${mobileCliente || 'Não informado'}</p>
+        </div>
+        
+        <p style="color: #ef4444; font-weight: bold; margin-bottom: 0;">Lembrete: Prazo de entrega é 48h a partir de agora!</p>
+      </div>
+    </div>
+  `;
+
+  try {
+    const info = await transporter.sendMail({
+      from: `"FaccioCtrl Sistema" <${SMTP_USER}>`,
+      to: FOUNDER_EMAIL,
+      subject: '🚀 Nova Configuração Expressa Solicitada!',
+      html,
+    });
+
+    console.log('Message sent: %s', info.messageId);
+    return true;
+  } catch (err) {
+    console.error('Error sending email:', err);
+    return false;
+  }
+}

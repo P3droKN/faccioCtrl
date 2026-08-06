@@ -23,11 +23,32 @@ export default async function DashboardLayout({ children }: { children: React.Re
 
   const isPro = session.plano === 'pro';
 
-  // Fetch complete user data to get avatarUrl
+  // Fetch complete user data to get avatarUrl and config status
   const user = await prisma.user.findUnique({
     where: { id: session.id },
-    select: { avatarUrl: true, nome: true }
+    select: { 
+      avatarUrl: true, 
+      nome: true,
+      configuracaoExpressaStatus: true,
+      configuracaoExpressaData: true
+    }
   });
+
+  let showExpressBanner = false;
+  let expressBannerMessage = '';
+  
+  if (user?.configuracaoExpressaStatus === 'solicitada' && user.configuracaoExpressaData) {
+    showExpressBanner = true;
+    const deadline = new Date(user.configuracaoExpressaData.getTime() + 48 * 60 * 60 * 1000);
+    const now = new Date();
+    
+    if (now > deadline) {
+      expressBannerMessage = "Estamos finalizando sua Configuração Expressa, entraremos em contato em breve.";
+    } else {
+      const formattedDeadline = deadline.toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' });
+      expressBannerMessage = `Sua Configuração Expressa está sendo preparada — prazo até ${formattedDeadline}.`;
+    }
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 text-gray-900 font-sans flex flex-col">
@@ -96,6 +117,13 @@ export default async function DashboardLayout({ children }: { children: React.Re
           </form>
         </div>
       </header>
+
+      {/* Banner de Configuração Expressa */}
+      {showExpressBanner && (
+        <div className="bg-blue-600 text-white px-4 py-2 text-center text-sm font-medium shadow-sm flex items-center justify-center gap-2 animate-pulse">
+          <span>🚀</span> {expressBannerMessage}
+        </div>
+      )}
 
       {/* Page content */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-10">
