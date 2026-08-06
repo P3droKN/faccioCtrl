@@ -67,11 +67,19 @@ export async function POST(req: Request) {
           },
         });
         
-        const { sendConfiguracaoExpressaEmail } = require('@/lib/utils/mailer');
+        const { sendConfiguracaoExpressaEmail, sendConfiguracaoExpressaCustomerEmail } = require('@/lib/utils/mailer');
+        
+        // 1. Avisa o fundador
         await sendConfiguracaoExpressaEmail(
           payload.Customer?.full_name,
           email,
           payload.Customer?.mobile
+        );
+        
+        // 2. Envia as instruções e o link do Telegram para o cliente
+        await sendConfiguracaoExpressaCustomerEmail(
+          email,
+          payload.Customer?.full_name
         );
       }
       return NextResponse.json({ success: true }, { status: 200 });
