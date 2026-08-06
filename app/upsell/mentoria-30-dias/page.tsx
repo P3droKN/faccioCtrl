@@ -56,7 +56,7 @@ export default function Mentoria30DiasPremium() {
               </div>
               <h4 className="text-xl font-bold text-white mb-3">A empolgação que dura 7 dias</h4>
               <p className="text-gray-400 leading-relaxed">
-                Comprar o FaccioCtrl foi o seu primeiro passo excelente. Mas nós sabemos como é a rotina de uma oficina. Na segunda semana, o volume de trabalho engole a sua intenção de se organizar.
+                Comprar o FaccioCtrl foi o seu primeiro passo excelente. Mas nós sabemos como é a rotina de uma confecção. Na segunda semana, o volume de trabalho engole a sua intenção de se organizar, e o sistema fica de lado.
               </p>
             </div>
             <div className="bg-[#111C33] border border-gray-800 rounded-2xl p-8 hover:border-blue-900/50 transition-colors">
@@ -65,7 +65,7 @@ export default function Mentoria30DiasPremium() {
               </div>
               <h4 className="text-xl font-bold text-white mb-3">Eu não vou deixar você desistir</h4>
               <p className="text-gray-400 leading-relaxed">
-                Eu criei essa mentoria porque o meu sucesso depende do seu sucesso. Durante os seus primeiros 30 dias, eu serei o seu parceiro de responsabilidade e consultor estratégico pessoal.
+                Eu sou especialista na ferramenta que construí. Durante os seus primeiros 30 dias, eu serei o seu parceiro de implantação. Vou garantir que o FaccioCtrl seja alimentado corretamente para te dar resultados.
               </p>
             </div>
           </div>
@@ -89,7 +89,7 @@ export default function Mentoria30DiasPremium() {
               </div>
               <div className="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] p-6 rounded-2xl bg-[#111C33] border border-gray-800 shadow-xl">
                 <h4 className="font-bold text-lg text-white mb-1">Semana 1: Setup e Hábitos</h4>
-                <p className="text-gray-400 text-sm">Definiremos exatamente por onde você deve começar para ter vitórias rápidas sem sobrecarregar sua rotina.</p>
+                <p className="text-gray-400 text-sm">Acompanhamento de perto na hora de cadastrar as suas primeiras facções e ordens para criar o hábito sem dor de cabeça.</p>
               </div>
             </div>
 
@@ -99,8 +99,8 @@ export default function Mentoria30DiasPremium() {
                 2
               </div>
               <div className="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] p-6 rounded-2xl bg-[#111C33] border border-gray-800 shadow-xl">
-                <h4 className="font-bold text-lg text-white mb-1">Semana 2: Gestão Visual</h4>
-                <p className="text-gray-400 text-sm">Correção de erros iniciais de lançamento e análise de como você está usando os quadros e ordens.</p>
+                <h4 className="font-bold text-lg text-white mb-1">Semana 2: Otimizando o Uso</h4>
+                <p className="text-gray-400 text-sm">Vou avaliar como você está usando as telas e corrigir erros comuns para você economizar cliques e tempo.</p>
               </div>
             </div>
 
@@ -110,8 +110,8 @@ export default function Mentoria30DiasPremium() {
                 3
               </div>
               <div className="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] p-6 rounded-2xl bg-[#111C33] border border-gray-800 shadow-xl">
-                <h4 className="font-bold text-lg text-white mb-1">Semana 3: Gargalos</h4>
-                <p className="text-gray-400 text-sm">Com o sistema alimentado, analisaremos juntos onde suas facções estão travando e como cobrar melhor.</p>
+                <h4 className="font-bold text-lg text-white mb-1">Semana 3: Lendo os Dados</h4>
+                <p className="text-gray-400 text-sm">Com o sistema alimentado, vou te ajudar a interpretar os gráficos e o dashboard para achar gargalos na produção.</p>
               </div>
             </div>
 
@@ -121,8 +121,8 @@ export default function Mentoria30DiasPremium() {
                 4
               </div>
               <div className="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] p-6 rounded-2xl bg-[#111C33] border border-gray-800 shadow-xl">
-                <h4 className="font-bold text-lg text-white mb-1">Semana 4: Plano de Voo</h4>
-                <p className="text-gray-400 text-sm">Entrega do mini-relatório final com o seu plano de ação para os próximos 90 dias com o FaccioCtrl.</p>
+                <h4 className="font-bold text-lg text-white mb-1">Semana 4: Independência</h4>
+                <p className="text-gray-400 text-sm">Entrega do seu diagnóstico de implantação, com dicas de ouro sobre como explorar o máximo do FaccioCtrl sozinho.</p>
               </div>
             </div>
 
@@ -142,22 +142,22 @@ export default function Mentoria30DiasPremium() {
             <div className="bg-[#111C33]/80 border border-gray-800 rounded-2xl p-6 backdrop-blur-sm">
               <MessageSquare className="w-8 h-8 text-blue-400 mb-4" />
               <h4 className="text-lg font-bold text-white mb-2">Acesso no Telegram</h4>
-              <p className="text-gray-400 text-sm">Comunicação direta comigo via áudio ou texto. Sem agendamento de chamadas chatas.</p>
+              <p className="text-gray-400 text-sm">Comunicação direta via áudio ou texto. Sem agendamento de chamadas chatas.</p>
             </div>
             <div className="bg-[#111C33]/80 border border-gray-800 rounded-2xl p-6 backdrop-blur-sm">
               <CheckCircle className="w-8 h-8 text-teal-400 mb-4" />
               <h4 className="text-lg font-bold text-white mb-2">4 Check-ins Ativos</h4>
-              <p className="text-gray-400 text-sm">Toda semana eu vou te chamar para saber o que travou e te dar a solução.</p>
+              <p className="text-gray-400 text-sm">Toda semana eu vou te chamar para saber se o sistema travou na sua rotina e te dar a solução.</p>
             </div>
             <div className="bg-[#111C33]/80 border border-gray-800 rounded-2xl p-6 backdrop-blur-sm">
               <Target className="w-8 h-8 text-blue-400 mb-4" />
-              <h4 className="text-lg font-bold text-white mb-2">Foco no seu cenário</h4>
-              <p className="text-gray-400 text-sm">Conselhos aplicados à realidade da sua oficina, e não teorias genéricas.</p>
+              <h4 className="text-lg font-bold text-white mb-2">Foco no Software</h4>
+              <p className="text-gray-400 text-sm">Análises precisas de como melhorar a sua organização interna utilizando a nossa plataforma.</p>
             </div>
             <div className="bg-[#111C33]/80 border border-gray-800 rounded-2xl p-6 backdrop-blur-sm">
               <LineChart className="w-8 h-8 text-teal-400 mb-4" />
-              <h4 className="text-lg font-bold text-white mb-2">Plano de 90 Dias</h4>
-              <p className="text-gray-400 text-sm">Um mini-relatório final mostrando os próximos passos de gestão para crescer.</p>
+              <h4 className="text-lg font-bold text-white mb-2">Plano de Independência</h4>
+              <p className="text-gray-400 text-sm">Um mini-diagnóstico final validando que a sua confecção já sabe usar a tecnologia a seu favor.</p>
             </div>
           </div>
         </div>
