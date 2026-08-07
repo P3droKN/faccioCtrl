@@ -43,13 +43,13 @@ export default function ObrigadoPage() {
             </p>
             
             <div className="space-y-3">
-              <a href="mailto:suporte@faccioctrl.com.br" className="flex items-center gap-3 p-3 bg-white border border-gray-200 rounded-lg hover:border-blue-300 transition-colors group">
+              <a href="mailto:suporteplataforma.pkn@gmail.com" className="flex items-center gap-3 p-3 bg-white border border-gray-200 rounded-lg hover:border-blue-300 transition-colors group">
                 <div className="w-10 h-10 bg-blue-50 rounded-full flex items-center justify-center text-blue-600 group-hover:bg-blue-100 transition-colors">
                   <Mail className="w-5 h-5" />
                 </div>
                 <div>
                   <div className="text-xs font-bold text-gray-500 uppercase">E-mail de Suporte</div>
-                  <div className="text-sm font-medium text-gray-900">suporte@faccioctrl.com.br</div>
+                  <div className="text-sm font-medium text-gray-900">suporteplataforma.pkn@gmail.com</div>
                 </div>
               </a>
             </div>
