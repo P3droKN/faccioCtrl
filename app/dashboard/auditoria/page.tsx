@@ -115,7 +115,7 @@ export default async function AuditoriaPage() {
           </div>
         )}
 
-        <div className={`bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden \${!isUnlocked ? 'blur-[3px] select-none pointer-events-none' : ''}`}>
+        <div className={`bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden ${!isUnlocked ? 'blur-md opacity-40 select-none pointer-events-none' : ''}`}>
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm text-gray-500">
               <thead className="text-xs text-gray-700 uppercase bg-gray-50 border-b border-gray-200">

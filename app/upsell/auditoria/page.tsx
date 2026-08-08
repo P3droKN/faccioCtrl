@@ -84,7 +84,7 @@ export default function UpsellAuditoriaPage() {
             className="w-full flex justify-center"
             dangerouslySetInnerHTML={{
             __html: `
-              <div style="text-align:center; width: 100%;" id="kiwify-upsell-yjPCVq9" data-upsell-url="https://faccioctrl.vercel.app/obrigado" data-downsell-url="https://faccioctrl.vercel.app/obrigado">
+              <div style="text-align:center; width: 100%;" id="kiwify-upsell-yjPCVq9" data-upsell-url="/obrigado" data-downsell-url="/obrigado">
                 <button id="kiwify-upsell-trigger-yjPCVq9" style="background-color:#2563eb;padding:16px 24px;cursor:pointer;color:#FFFFFF;font-weight:700;border-radius:12px;border:none;font-size:18px;width:100%;max-width:400px;transition:all 0.2s;" onmouseover="this.style.backgroundColor='#1d4ed8'" onmouseout="this.style.backgroundColor='#2563eb'">
                   Sim, quero liberar a Auditoria!
                 </button>
@@ -92,9 +92,10 @@ export default function UpsellAuditoriaPage() {
                   Não, prefiro cobrar os atrasos manualmente
                 </div>
               </div>
-              <script src="https://snippets.kiwify.com/upsell/upsell.min.js"></script>
             `
           }} />
+
+          <script src="https://snippets.kiwify.com/upsell/upsell.min.js" async></script>
 
           <div className="mt-8 flex items-center justify-center gap-2 text-sm text-gray-500">
             <CheckCircle className="w-4 h-4 text-teal-500" />
