@@ -40,7 +40,8 @@ export default async function DashboardLayout({ children }: { children: React.Re
       configuracaoExpressaStatus: true,
       configuracaoExpressaData: true,
       mentoria30DiasStatus: true,
-      mentoria30DiasCheckins: true
+      mentoria30DiasCheckins: true,
+      moduloAuditoria: true
     }
   });
 
