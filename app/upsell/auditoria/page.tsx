@@ -80,29 +80,47 @@ export default function UpsellAuditoriaPage() {
             <div className="text-5xl font-extrabold text-white mt-2">R$ 197<span className="text-2xl text-gray-500">,00</span></div>
           </div>
 
-          <div 
-            className="w-full flex justify-center"
-            dangerouslySetInnerHTML={{
-            __html: `
-              <div style="text-align:center; width: 100%;" id="kiwify-upsell-yjPCVq9" data-upsell-url="/obrigado" data-downsell-url="/obrigado">
-                <button id="kiwify-upsell-trigger-yjPCVq9" style="background-color:#2563eb;padding:16px 24px;cursor:pointer;color:#FFFFFF;font-weight:700;border-radius:12px;border:none;font-size:18px;width:100%;max-width:400px;transition:all 0.2s;" onmouseover="this.style.backgroundColor='#1d4ed8'" onmouseout="this.style.backgroundColor='#2563eb'">
-                  Sim, quero liberar a Auditoria!
-                </button>
-                <div id="kiwify-upsell-cancel-trigger-yjPCVq9" style="margin-top:1.5rem;cursor:pointer;font-size:14px;color:#6b7280;text-decoration:underline;transition:color 0.2s;" onmouseover="this.style.color='#9ca3af'" onmouseout="this.style.color='#6b7280'">
-                  Não, prefiro cobrar os atrasos manualmente
-                </div>
+          <div className="w-full flex justify-center">
+            <div style={{ textAlign: 'center', width: '100%' }}>
+              <a 
+                href="https://pay.kiwify.com.br/yjPCVq9" 
+                style={{
+                  display: 'inline-block',
+                  backgroundColor: '#2563eb',
+                  padding: '16px 24px',
+                  cursor: 'pointer',
+                  color: '#FFFFFF',
+                  fontWeight: 700,
+                  borderRadius: '12px',
+                  border: 'none',
+                  fontSize: '18px',
+                  width: '100%',
+                  maxWidth: '400px',
+                  transition: 'all 0.2s',
+                  textDecoration: 'none'
+                }} 
+                onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#1d4ed8'} 
+                onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#2563eb'}
+              >
+                Sim, quero liberar a Auditoria!
+              </a>
+              <div 
+                style={{
+                  marginTop: '1.5rem',
+                  cursor: 'pointer',
+                  fontSize: '14px',
+                  color: '#6b7280',
+                  textDecoration: 'underline',
+                  transition: 'color 0.2s'
+                }} 
+                onMouseOver={(e) => e.currentTarget.style.color = '#9ca3af'} 
+                onMouseOut={(e) => e.currentTarget.style.color = '#6b7280'}
+                onClick={() => window.location.href = '/dashboard/auditoria'}
+              >
+                Não, prefiro cobrar os atrasos manualmente
               </div>
-            `
-          }} />
-
-          <script src="https://snippets.kiwify.com/upsell/upsell.min.js" async></script>
-
-          {/* Força a cor do texto do dropdown (select) injetado pela Kiwify para ficar escuro e legível */}
-          <style dangerouslySetInnerHTML={{__html: `
-            select, option {
-              color: #111827 !important;
-            }
-          `}} />
+            </div>
+          </div>
 
           <div className="mt-8 flex items-center justify-center gap-2 text-sm text-gray-500">
             <CheckCircle className="w-4 h-4 text-teal-500" />
