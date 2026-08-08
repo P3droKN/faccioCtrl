@@ -84,40 +84,17 @@ export default function UpsellAuditoriaPage() {
             <div style={{ textAlign: 'center', width: '100%' }}>
               <a 
                 href="https://pay.kiwify.com.br/yjPCVq9" 
-                style={{
-                  display: 'inline-block',
-                  backgroundColor: '#2563eb',
-                  padding: '16px 24px',
-                  cursor: 'pointer',
-                  color: '#FFFFFF',
-                  fontWeight: 700,
-                  borderRadius: '12px',
-                  border: 'none',
-                  fontSize: '18px',
-                  width: '100%',
-                  maxWidth: '400px',
-                  transition: 'all 0.2s',
-                  textDecoration: 'none'
-                }} 
-                onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#1d4ed8'} 
-                onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#2563eb'}
+                className="inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-6 rounded-xl transition-all duration-200 text-lg w-full max-w-[400px] no-underline"
               >
                 Sim, quero liberar a Auditoria!
               </a>
-              <div 
-                style={{
-                  marginTop: '1.5rem',
-                  cursor: 'pointer',
-                  fontSize: '14px',
-                  color: '#6b7280',
-                  textDecoration: 'underline',
-                  transition: 'color 0.2s'
-                }} 
-                onMouseOver={(e) => e.currentTarget.style.color = '#9ca3af'} 
-                onMouseOut={(e) => e.currentTarget.style.color = '#6b7280'}
-                onClick={() => window.location.href = '/dashboard/auditoria'}
-              >
-                Não, prefiro cobrar os atrasos manualmente
+              <div className="mt-6">
+                <a 
+                  href="/dashboard/auditoria"
+                  className="text-sm text-gray-500 hover:text-gray-400 underline transition-colors cursor-pointer"
+                >
+                  Não, prefiro cobrar os atrasos manualmente
+                </a>
               </div>
             </div>
           </div>
