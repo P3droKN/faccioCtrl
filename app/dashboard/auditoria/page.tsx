@@ -139,9 +139,9 @@ export default async function AuditoriaPage() {
                 ) : (
                   lateOrders.map((ordem) => {
                     const daysLate = Math.floor((today.getTime() - new Date(ordem.prazoAcordado).getTime()) / (1000 * 60 * 60 * 24));
-                    const whatsappNumber = formatWhatsApp(ordem.faccao.whatsapp);
-                    const whatsappMessage = encodeURIComponent(`Olá! Notamos que a Ordem \${ordem.numeroOrdem} (\${ordem.produto}) estava prevista para \${ordem.prazoAcordado.toLocaleDateString('pt-BR')}. Qual a previsão de entrega?`);
-                    const whatsappLink = `https://wa.me/\${whatsappNumber}?text=\${whatsappMessage}`;
+                    const whatsappNumber = formatWhatsApp(ordem.faccao.contato);
+                    const whatsappMessage = encodeURIComponent(`Olá! Notamos que a Ordem ${ordem.numeroOrdem} (${ordem.produto}) estava prevista para ${ordem.prazoAcordado.toLocaleDateString('pt-BR')}. Qual a previsão de entrega?`);
+                    const whatsappLink = `https://wa.me/${whatsappNumber}?text=${whatsappMessage}`;
 
                     return (
                       <tr key={ordem.id} className="border-b border-gray-100 hover:bg-red-50/30 transition-colors">
