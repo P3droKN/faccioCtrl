@@ -61,8 +61,10 @@ export default function ConfiguracaoExpressaUpsell() {
               </button>
               <div id="kiwify-upsell-cancel-trigger" style="margin-top:1.5rem;cursor:pointer;font-size:14px;color:#9ca3af;text-decoration:underline;transition:color 0.2s;" onmouseover="this.style.color='#4b5563'" onmouseout="this.style.color='#9ca3af'">
                 Não, obrigado, prefiro configurar sozinho
+              </div>
             </div>
-          </div>
+          `
+        }} />
 
         </div>
       </div>

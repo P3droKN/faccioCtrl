@@ -116,7 +116,7 @@ export default async function AuditoriaPage() {
           </div>
         )}
 
-        <div className={\`bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden \${!isUnlocked ? 'blur-[3px] select-none pointer-events-none' : ''}\`}>
+        <div className={`bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden \${!isUnlocked ? 'blur-[3px] select-none pointer-events-none' : ''}`}>
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm text-gray-500">
               <thead className="text-xs text-gray-700 uppercase bg-gray-50 border-b border-gray-200">
@@ -140,8 +140,8 @@ export default async function AuditoriaPage() {
                   lateOrders.map((ordem) => {
                     const daysLate = Math.floor((today.getTime() - new Date(ordem.prazoAcordado).getTime()) / (1000 * 60 * 60 * 24));
                     const whatsappNumber = formatWhatsApp(ordem.faccao.whatsapp);
-                    const whatsappMessage = encodeURIComponent(\`Olá! Notamos que a Ordem \${ordem.numeroOrdem} (\${ordem.produto}) estava prevista para \${ordem.prazoAcordado.toLocaleDateString('pt-BR')}. Qual a previsão de entrega?\`);
-                    const whatsappLink = \`https://wa.me/\${whatsappNumber}?text=\${whatsappMessage}\`;
+                    const whatsappMessage = encodeURIComponent(`Olá! Notamos que a Ordem \${ordem.numeroOrdem} (\${ordem.produto}) estava prevista para \${ordem.prazoAcordado.toLocaleDateString('pt-BR')}. Qual a previsão de entrega?`);
+                    const whatsappLink = `https://wa.me/\${whatsappNumber}?text=\${whatsappMessage}`;
 
                     return (
                       <tr key={ordem.id} className="border-b border-gray-100 hover:bg-red-50/30 transition-colors">

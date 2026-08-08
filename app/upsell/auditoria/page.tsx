@@ -83,7 +83,7 @@ export default function UpsellAuditoriaPage() {
           <div 
             className="w-full flex justify-center"
             dangerouslySetInnerHTML={{
-            __html: \`
+            __html: `
               <div style="text-align:center; width: 100%;" id="kiwify-upsell-yjPCVq9" data-upsell-url="https://faccioctrl.vercel.app/obrigado" data-downsell-url="https://faccioctrl.vercel.app/obrigado">
                 <button id="kiwify-upsell-trigger-yjPCVq9" style="background-color:#2563eb;padding:16px 24px;cursor:pointer;color:#FFFFFF;font-weight:700;border-radius:12px;border:none;font-size:18px;width:100%;max-width:400px;transition:all 0.2s;" onmouseover="this.style.backgroundColor='#1d4ed8'" onmouseout="this.style.backgroundColor='#2563eb'">
                   Sim, quero liberar a Auditoria!
@@ -93,7 +93,7 @@ export default function UpsellAuditoriaPage() {
                 </div>
               </div>
               <script src="https://snippets.kiwify.com/upsell/upsell.min.js"></script>
-            \`
+            `
           }} />
 
           <div className="mt-8 flex items-center justify-center gap-2 text-sm text-gray-500">
