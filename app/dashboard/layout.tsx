@@ -1,12 +1,20 @@
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { decrypt, logoutAction } from '../actions/auth';
-import { Scissors, LogOut, LayoutDashboard, Package, Factory, TrendingUp } from 'lucide-react';
+import { Scissors, LogOut, LayoutDashboard, Package, Factory, TrendingUp, ShieldAlert, FileText, Users } from 'lucide-react';
 import Link from 'next/link';
 import { PrismaClient } from '@prisma/client';
 import SubscriptionGate from './components/SubscriptionGate';
 
 const prisma = new PrismaClient();
+
+const navigation = [
+  { name: 'Visão Geral', href: '/dashboard', icon: LayoutDashboard },
+  { name: 'Desempenho', href: '/dashboard/desempenho', icon: TrendingUp },
+  { name: 'Facções', href: '/dashboard/faccoes', icon: Factory },
+  { name: 'Ordens de Produção', href: '/dashboard/ordens', icon: Package },
+  { name: 'Auditoria', href: '/dashboard/auditoria', icon: ShieldAlert },
+];
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
   const cookieStore = await cookies();
@@ -96,6 +104,13 @@ export default async function DashboardLayout({ children }: { children: React.Re
             >
               <Package className="w-4 h-4" />
               Ordens de Produção
+            </Link>
+            <Link
+              href="/dashboard/auditoria"
+              className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-gray-600 hover:text-[#1F3864] hover:bg-blue-50 transition-colors"
+            >
+              <ShieldAlert className="w-4 h-4" />
+              Auditoria {user?.moduloAuditoria ? '' : '🔒'}
             </Link>
           </nav>
         )}

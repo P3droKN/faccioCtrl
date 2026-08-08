@@ -27,21 +27,21 @@ export async function POST(req: Request) {
     let planoStatus: 'pro' | 'cancelado' | null = null;
     let isExpressaConfig = false;
 
-    let isMentoria = false;
+    let isAuditoria = false;
 
     // Normalize product name to avoid mismatch
     const productName = (payload.Product?.product_name || '').toLowerCase().trim();
     if (productName === 'configuração expressa faccioctrl'.toLowerCase()) {
       isExpressaConfig = true;
-    } else if (productName === 'mentoria de 30 dias faccioctrl'.toLowerCase()) {
-      isMentoria = true;
+    } else if (productName === 'módulo auditoria faccioctrl'.toLowerCase()) {
+      isAuditoria = true;
     }
 
     // 2. Mapeamento dos Eventos
     switch (eventType) {
       case 'order_approved':
       case 'subscription_renewed':
-        if (!isExpressaConfig && !isMentoria) {
+        if (!isExpressaConfig && !isAuditoria) {
           planoStatus = 'pro';
         }
         break;
@@ -49,7 +49,7 @@ export async function POST(req: Request) {
       case 'order_rejected':
       case 'subscription_late':
       case 'subscription_canceled':
-        if (!isExpressaConfig && !isMentoria) {
+        if (!isExpressaConfig && !isAuditoria) {
           planoStatus = 'cancelado';
         }
         break;
@@ -89,31 +89,16 @@ export async function POST(req: Request) {
       return NextResponse.json({ success: true }, { status: 200 });
     }
 
-    if (eventType === 'order_approved' && isMentoria) {
+    if (eventType === 'order_approved' && isAuditoria) {
       const user = await prisma.user.findUnique({ where: { email } });
       
       if (user) {
         await prisma.user.update({
           where: { email },
           data: {
-            mentoria30DiasStatus: 'ativa',
-            mentoria30DiasInicio: new Date(),
-            mentoria30DiasCheckins: 0,
+            moduloAuditoria: true,
           },
         });
-        
-        const { sendMentoriaEmail, sendMentoriaCustomerEmail } = require('@/lib/utils/mailer');
-        
-        await sendMentoriaEmail(
-          payload.Customer?.full_name,
-          email,
-          payload.Customer?.mobile
-        );
-
-        await sendMentoriaCustomerEmail(
-          email,
-          payload.Customer?.full_name
-        );
       }
       return NextResponse.json({ success: true }, { status: 200 });
     }

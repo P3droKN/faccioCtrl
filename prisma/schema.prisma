@@ -15,7 +15,7 @@ model User {
   nomeConfeccao              String?
   whatsapp                   String?
   avatarUrl                  String?
-  plano                      String               @default("pendente")
+  plano                      String               @default("basico")
   subscriptionId             String?
   nextPayment                DateTime?
   configuracaoExpressaStatus String?
@@ -23,6 +23,7 @@ model User {
   mentoria30DiasStatus       String?
   mentoria30DiasInicio       DateTime?
   mentoria30DiasCheckins     Int?                 @default(0)
+  moduloAuditoria            Boolean              @default(false)
   createdAt                  DateTime             @default(now())
   updatedAt                  DateTime             @updatedAt
   accessTokens               AccessToken[]
