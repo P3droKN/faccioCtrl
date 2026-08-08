@@ -1,43 +1,48 @@
 import { NextResponse } from 'next/server';
 import { PrismaClient } from '@prisma/client';
+import crypto from 'crypto';
 
 const prisma = new PrismaClient();
-const KIWIFY_SECRET = process.env.KIWIFY_WEBHOOK_SECRET;
 
 export async function POST(req: Request) {
-  // 1. Validar Signature
-  const url = new URL(req.url);
-  const signature = url.searchParams.get('signature');
-
-  if (signature !== KIWIFY_SECRET) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
-
   try {
-    const payload = await req.json();
-    const eventType = payload.webhook_event_type;
+    const rawBody = await req.text();
+    const payload = JSON.parse(rawBody);
+
+    // 1. Signature Validation (HMAC-SHA1 timing-safe)
+    const { searchParams } = new URL(req.url);
+    const signature = searchParams.get('signature');
+    const token = process.env.KIWIFY_WEBHOOK_TOKEN;
+
+    if (!token || !signature) {
+      return NextResponse.json({ message: 'Missing token or signature' }, { status: 403 });
+    }
+
+    const calculatedSignature = crypto
+      .createHmac('sha1', token)
+      .update(rawBody)
+      .digest('hex');
+
+    if (signature.length !== calculatedSignature.length || !crypto.timingSafeEqual(Buffer.from(signature), Buffer.from(calculatedSignature))) {
+      return NextResponse.json({ message: 'Invalid signature' }, { status: 403 });
+    }
+
+    // 2. Extração de Dados
+    const eventType = payload.order_status || payload.subscription_status || '';
     const email = payload.Customer?.email;
+    const productId = payload.Product?.product_id;
     const subscriptionId = payload.Subscription?.id;
     const nextPaymentRaw = payload.Subscription?.next_payment;
 
     if (!email) {
-      return NextResponse.json({ error: 'No email found in payload' }, { status: 400 });
+      return NextResponse.json({ message: 'No email provided' }, { status: 400 });
     }
 
     let planoStatus: 'pro' | 'cancelado' | null = null;
-    let isExpressaConfig = false;
+    let isExpressaConfig = (productId === 'b5e43db0-913e-11f1-a51e-157bea9120b3');
+    let isAuditoria = (productId === '73f80c70-92c3-11f1-bf15-e7e84c759762');
 
-    let isAuditoria = false;
-
-    // Normalize product name to avoid mismatch
-    const productName = (payload.Product?.product_name || '').toLowerCase().trim();
-    if (productName === 'configuração expressa faccioctrl'.toLowerCase()) {
-      isExpressaConfig = true;
-    } else if (productName === 'módulo auditoria faccioctrl'.toLowerCase()) {
-      isAuditoria = true;
-    }
-
-    // 2. Mapeamento dos Eventos
+    // 3. Mapeamento de Eventos (Assinatura Base)
     switch (eventType) {
       case 'order_approved':
       case 'subscription_renewed':
@@ -53,58 +58,51 @@ export async function POST(req: Request) {
           planoStatus = 'cancelado';
         }
         break;
-
-      default:
-        // Ignora eventos que não são de assinatura/venda
-        return NextResponse.json({ message: 'Event ignored' }, { status: 200 });
     }
 
-    if (eventType === 'order_approved' && isExpressaConfig) {
+    // Upsell 1: Configuração Expressa
+    if (isExpressaConfig) {
       const user = await prisma.user.findUnique({ where: { email } });
-      
       if (user) {
-        await prisma.user.update({
-          where: { email },
-          data: {
-            configuracaoExpressaStatus: 'solicitada',
-            configuracaoExpressaData: new Date(),
-          },
-        });
-        
-        const { sendConfiguracaoExpressaEmail, sendConfiguracaoExpressaCustomerEmail } = require('@/lib/utils/mailer');
-        
-        // 1. Avisa o fundador
-        await sendConfiguracaoExpressaEmail(
-          payload.Customer?.full_name,
-          email,
-          payload.Customer?.mobile
-        );
-        
-        // 2. Envia as instruções e o link do Telegram para o cliente
-        await sendConfiguracaoExpressaCustomerEmail(
-          email,
-          payload.Customer?.full_name
-        );
+        if (eventType === 'order_approved') {
+          await prisma.user.update({
+            where: { email },
+            data: { configuracaoExpressaStatus: 'solicitada', configuracaoExpressaData: new Date() },
+          });
+          const { sendConfiguracaoExpressaEmail, sendConfiguracaoExpressaCustomerEmail } = require('@/lib/utils/mailer');
+          await sendConfiguracaoExpressaEmail(payload.Customer?.full_name, email, payload.Customer?.mobile);
+          await sendConfiguracaoExpressaCustomerEmail(email, payload.Customer?.full_name);
+        } else if (['order_refunded', 'chargeback'].includes(eventType)) {
+          await prisma.user.update({
+            where: { email },
+            data: { configuracaoExpressaStatus: 'cancelada' },
+          });
+        }
       }
       return NextResponse.json({ success: true }, { status: 200 });
     }
 
-    if (eventType === 'order_approved' && isAuditoria) {
+    // Upsell 2: Módulo Auditoria
+    if (isAuditoria) {
       const user = await prisma.user.findUnique({ where: { email } });
-      
       if (user) {
-        await prisma.user.update({
-          where: { email },
-          data: {
-            moduloAuditoria: true,
-          },
-        });
+        if (eventType === 'order_approved') {
+          await prisma.user.update({
+            where: { email },
+            data: { moduloAuditoria: true },
+          });
+        } else if (['order_refunded', 'chargeback'].includes(eventType)) {
+          await prisma.user.update({
+            where: { email },
+            data: { moduloAuditoria: false },
+          });
+        }
       }
       return NextResponse.json({ success: true }, { status: 200 });
     }
 
+    // Assinatura Base Updates
     if (planoStatus) {
-      // 3. Atualizar no banco
       const user = await prisma.user.findUnique({ where: { email } });
       
       if (user) {
@@ -121,42 +119,23 @@ export async function POST(req: Request) {
         // Usuário não existe
         if (planoStatus === 'pro') {
           // Cria o usuário apenas se for evento de aprovação
-          const newUser = await prisma.user.create({
+          await prisma.user.create({
             data: {
               email,
               nome: payload.Customer?.full_name || 'Novo Usuário',
               plano: 'pro',
               subscriptionId: subscriptionId,
               nextPayment: nextPaymentRaw ? new Date(nextPaymentRaw) : undefined,
-              // password e nomeConfeccao são opcionais agora e serão preenchidos no primeiro acesso
             }
           });
-
-          // Gera Token de 24h
-          const crypto = require('crypto');
-          const tokenStr = crypto.randomBytes(32).toString('hex');
-          const expiresAt = new Date();
-          expiresAt.setHours(expiresAt.getHours() + 24);
-
-          await prisma.accessToken.create({
-            data: {
-              token: tokenStr,
-              userId: newUser.id,
-              expiresAt,
-            }
-          });
-
-          // Dispara E-mail com o link mágico (dinâmico)
-          // Usamos require para evitar conflitos de build/serverless dependendo do Next.js
-          const { sendMagicLinkEmail } = require('@/lib/utils/mailer');
-          await sendMagicLinkEmail(email, tokenStr);
         }
       }
     }
 
     return NextResponse.json({ success: true }, { status: 200 });
+
   } catch (error) {
-    console.error('Webhook Error:', error);
-    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+    console.error('Webhook processing error:', error);
+    return NextResponse.json({ message: 'Internal Server Error' }, { status: 500 });
   }
 }
