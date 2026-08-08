@@ -97,6 +97,13 @@ export default function UpsellAuditoriaPage() {
 
           <script src="https://snippets.kiwify.com/upsell/upsell.min.js" async></script>
 
+          {/* Força a cor do texto do dropdown (select) injetado pela Kiwify para ficar escuro e legível */}
+          <style dangerouslySetInnerHTML={{__html: `
+            select, option {
+              color: #111827 !important;
+            }
+          `}} />
+
           <div className="mt-8 flex items-center justify-center gap-2 text-sm text-gray-500">
             <CheckCircle className="w-4 h-4 text-teal-500" />
             <span>Liberação imediata no seu painel</span>
