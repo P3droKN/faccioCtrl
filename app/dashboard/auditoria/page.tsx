@@ -92,7 +92,7 @@ export default async function AuditoriaPage() {
       )}
 
       {/* Tabela de Ordens */}
-      <div className="relative mt-4">
+      <div className={`relative mt-4 ${!isUnlocked ? 'min-h-[450px]' : ''}`}>
         
         {!isUnlocked && (
           <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-white/60 backdrop-blur-sm rounded-xl border border-gray-200">
