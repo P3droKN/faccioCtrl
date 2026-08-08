@@ -2,7 +2,7 @@ import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { PrismaClient } from '@prisma/client';
 import { decrypt } from '@/app/actions/auth';
-import { ShieldAlert, AlertTriangle, MessageCircle, Lock } from 'lucide-react';
+import { ShieldAlert, AlertTriangle, MessageCircle, Lock, Clock } from 'lucide-react';
 import Link from 'next/link';
 
 const prisma = new PrismaClient();
