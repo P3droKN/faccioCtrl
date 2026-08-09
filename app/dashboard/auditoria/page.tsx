@@ -106,7 +106,8 @@ export default async function AuditoriaPage() {
                 Você tem {lateOrders.length} ordens atrasadas paradas nas suas facções. Desbloqueie o Módulo de Auditoria para ver os detalhes e cobrar automaticamente via WhatsApp.
               </p>
               <a 
-                href="/upsell/auditoria" 
+                href="https://pay.kiwify.com.br/yjPCVq9" 
+                target="_blank"
                 className="w-full inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-xl transition-colors shadow-lg shadow-blue-200"
               >
                 Desbloquear Módulo agora

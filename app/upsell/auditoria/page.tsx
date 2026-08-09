@@ -80,24 +80,20 @@ export default function UpsellAuditoriaPage() {
             <div className="text-5xl font-extrabold text-white mt-2">R$ 197<span className="text-2xl text-gray-500">,00</span></div>
           </div>
 
-          <div className="w-full flex justify-center">
-            <div style={{ textAlign: 'center', width: '100%' }}>
-              <a 
-                href="https://pay.kiwify.com.br/yjPCVq9" 
-                className="inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-6 rounded-xl transition-all duration-200 text-lg w-full max-w-[400px] no-underline"
-              >
-                Sim, quero liberar a Auditoria!
-              </a>
-              <div className="mt-6">
-                <a 
-                  href="/dashboard/auditoria"
-                  className="text-sm text-gray-500 hover:text-gray-400 underline transition-colors cursor-pointer"
-                >
+          <div 
+            className="w-full flex justify-center"
+            dangerouslySetInnerHTML={{
+            __html: `
+              <div style="text-align:center; width: 100%;" id="kiwify-upsell-yjPCVq9" data-upsell-url="/obrigado" data-downsell-url="/obrigado">
+                <button id="kiwify-upsell-trigger-yjPCVq9" style="background-color:#2563eb;padding:16px 24px;cursor:pointer;color:#FFFFFF;font-weight:700;border-radius:12px;border:none;font-size:18px;width:100%;max-width:400px;transition:all 0.2s;" onmouseover="this.style.backgroundColor='#1d4ed8'" onmouseout="this.style.backgroundColor='#2563eb'">
+                  Sim, quero liberar a Auditoria!
+                </button>
+                <div id="kiwify-upsell-cancel-trigger-yjPCVq9" style="margin-top:1.5rem;cursor:pointer;font-size:14px;color:#6b7280;text-decoration:underline;transition:color 0.2s;" onmouseover="this.style.color='#9ca3af'" onmouseout="this.style.color='#6b7280'">
                   Não, prefiro cobrar os atrasos manualmente
-                </a>
+                </div>
               </div>
-            </div>
-          </div>
+            `
+          }} />
 
           <div className="mt-8 flex items-center justify-center gap-2 text-sm text-gray-500">
             <CheckCircle className="w-4 h-4 text-teal-500" />
