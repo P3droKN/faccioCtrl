@@ -119,7 +119,7 @@ export async function POST(req: Request) {
         // Usuário não existe
         if (planoStatus === 'pro') {
           // Cria o usuário apenas se for evento de aprovação
-          await prisma.user.create({
+          const newUser = await prisma.user.create({
             data: {
               email,
               nome: payload.Customer?.full_name || 'Novo Usuário',
@@ -128,6 +128,29 @@ export async function POST(req: Request) {
               nextPayment: nextPaymentRaw ? new Date(nextPaymentRaw) : undefined,
             }
           });
+
+          // Gera e envia o Magic Link de primeiro acesso
+          try {
+            const { sendMagicLinkEmail } = require('@/lib/utils/mailer');
+            const crypto = require('crypto');
+            const tokenStr = crypto.randomBytes(32).toString('hex');
+            
+            await prisma.accessToken.create({
+              data: {
+                token: tokenStr,
+                userId: newUser.id,
+                expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000) // 24h
+              }
+            });
+
+            console.log(`Enviando Magic Link de boas-vindas para: ${email}`);
+            const emailSent = await sendMagicLinkEmail(email, tokenStr);
+            if (!emailSent) {
+              console.error(`Falha ao enviar Magic Link para: ${email}`);
+            }
+          } catch (emailError) {
+            console.error('Erro crítico ao gerar ou enviar Magic Link:', emailError);
+          }
         }
       }
     }
