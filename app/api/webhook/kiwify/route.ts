@@ -23,6 +23,12 @@ export async function POST(req: Request) {
       .update(rawBody)
       .digest('hex');
 
+    // --- DEBUG LOGS (Temporário) ---
+    console.log('[DEBUG WEBHOOK] Token (4 chars):', token.substring(0, 4));
+    console.log('[DEBUG WEBHOOK] Assinatura Recebida:', signature);
+    console.log('[DEBUG WEBHOOK] Assinatura Calculada:', calculatedSignature);
+    // -------------------------------
+
     if (signature.length !== calculatedSignature.length || !crypto.timingSafeEqual(Buffer.from(signature), Buffer.from(calculatedSignature))) {
       return NextResponse.json({ message: 'Invalid signature' }, { status: 403 });
     }
