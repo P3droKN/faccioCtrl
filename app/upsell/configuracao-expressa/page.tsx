@@ -51,15 +51,11 @@ export default function ConfiguracaoExpressaUpsell() {
           {/* Pricing & CTA */}
           <div className="pt-6 border-t border-gray-100 text-center" dangerouslySetInnerHTML={{
           __html: `
-            <div style="text-align:center" id="kiwify-upsell-accept" data-upsell-url="https://faccioctrl.vercel.app/upsell/auditoria" data-downsell-url="https://faccioctrl.vercel.app/obrigado">
-              <div class="mb-6">
-                <span style="color:#6b7280;text-transform:uppercase;letter-spacing:0.05em;font-size:0.875rem;font-weight:600;">Pagamento Único</span>
-                <div style="font-size:3rem;font-weight:800;color:#111827;margin-top:0.5rem;">R$ 67<span style="font-size:1.5rem;color:#6b7280;">,00</span></div>
-              </div>
-              <button id="kiwify-upsell-trigger" style="background-color:#22c55e;padding:16px 24px;cursor:pointer;color:#FFFFFF;font-weight:700;border-radius:12px;border:none;font-size:18px;width:100%;transition:all 0.2s;" onmouseover="this.style.backgroundColor='#16a34a'" onmouseout="this.style.backgroundColor='#22c55e'">
+            <div style="text-align:center; width: 100%;" id="kiwify-upsell-kBycMUu" data-upsell-url="/upsell/auditoria" data-downsell-url="/obrigado">
+              <button id="kiwify-upsell-trigger-kBycMUu" style="background-color:#22c55e;padding:16px 24px;cursor:pointer;color:#FFFFFF;font-weight:700;border-radius:12px;border:none;font-size:18px;width:100%;transition:all 0.2s;" onmouseover="this.style.backgroundColor='#16a34a'" onmouseout="this.style.backgroundColor='#22c55e'">
                 Sim, quero a Configuração Expressa
               </button>
-              <div id="kiwify-upsell-cancel-trigger" style="margin-top:1.5rem;cursor:pointer;font-size:14px;color:#9ca3af;text-decoration:underline;transition:color 0.2s;" onmouseover="this.style.color='#4b5563'" onmouseout="this.style.color='#9ca3af'">
+              <div id="kiwify-upsell-cancel-trigger-kBycMUu" style="margin-top:1.5rem;cursor:pointer;font-size:14px;color:#9ca3af;text-decoration:underline;transition:color 0.2s;" onmouseover="this.style.color='#4b5563'" onmouseout="this.style.color='#9ca3af'">
                 Não, obrigado, prefiro configurar sozinho
               </div>
             </div>

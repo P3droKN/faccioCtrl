@@ -75,12 +75,8 @@ export default function UpsellAuditoriaPage() {
             Por um pagamento único (sem mensalidades extras), você libera essa tela para sempre na sua conta FaccioCtrl. Economize horas de estresse e garanta que nenhuma peça se perca.
           </p>
           
-          <div className="mb-8">
-            <span className="text-gray-500 uppercase tracking-wider text-sm font-semibold">Pagamento Único</span>
-            <div className="text-5xl font-extrabold text-white mt-2">R$ 197<span className="text-2xl text-gray-500">,00</span></div>
-          </div>
-
           <div 
+
             className="w-full flex justify-center"
             dangerouslySetInnerHTML={{
             __html: `
