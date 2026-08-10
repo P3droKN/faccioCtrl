@@ -40,6 +40,9 @@ export async function POST(req: Request) {
     const subscriptionId = payload.Subscription?.id;
     const nextPaymentRaw = payload.Subscription?.next_payment;
 
+    console.log('[DEBUG WEBHOOK] Payload processado. EventType:', eventType, '| ProductID:', productId, '| Email:', email);
+
+
     if (!email) {
       return NextResponse.json({ message: 'No email provided' }, { status: 400 });
     }
@@ -115,6 +118,7 @@ export async function POST(req: Request) {
       
       if (user) {
         // Usuário existe, atualiza
+        console.log('[DEBUG WEBHOOK] Usuario ja existe no banco. Atualizando plano para:', planoStatus);
         await prisma.user.update({
           where: { email },
           data: {
@@ -123,8 +127,35 @@ export async function POST(req: Request) {
             nextPayment: nextPaymentRaw ? new Date(nextPaymentRaw) : user.nextPayment,
           },
         });
+        
+        // Se for order_approved de uma compra principal e o usuário já existia (ex: teste), 
+        // talvez ele precise do link. Mas por padrão, renews não enviam link.
+        // Vamos enviar se for evento order_approved para garantir que testes recebam.
+        if (eventType === 'order_approved' && planoStatus === 'pro') {
+          console.log('[DEBUG WEBHOOK] Usuario existente recebeu order_approved (pro). Tentando enviar Magic Link...');
+          try {
+            const { sendMagicLinkEmail } = require('@/lib/utils/mailer');
+            const crypto = require('crypto');
+            const tokenStr = crypto.randomBytes(32).toString('hex');
+            
+            await prisma.accessToken.create({
+              data: {
+                token: tokenStr,
+                userId: user.id,
+                expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24), // 24h
+              }
+            });
+
+            const emailResult = await sendMagicLinkEmail(email, tokenStr);
+            console.log('[DEBUG WEBHOOK] Resultado do envio (User Existente):', emailResult);
+          } catch (err) {
+            console.error('[DEBUG WEBHOOK] Erro ao enviar Magic Link (User Existente):', err);
+          }
+        }
+
       } else {
         // Usuário não existe
+        console.log('[DEBUG WEBHOOK] Usuario NAO existe no banco. Status plano:', planoStatus);
         if (planoStatus === 'pro') {
           // Cria o usuário apenas se for evento de aprovação
           const newUser = await prisma.user.create({
@@ -147,17 +178,15 @@ export async function POST(req: Request) {
               data: {
                 token: tokenStr,
                 userId: newUser.id,
-                expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000) // 24h
+                expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24), // 24h
               }
             });
 
-            console.log(`Enviando Magic Link de boas-vindas para: ${email}`);
-            const emailSent = await sendMagicLinkEmail(email, tokenStr);
-            if (!emailSent) {
-              console.error(`Falha ao enviar Magic Link para: ${email}`);
-            }
-          } catch (emailError) {
-            console.error('Erro crítico ao gerar ou enviar Magic Link:', emailError);
+            console.log('[DEBUG WEBHOOK] Disparando sendMagicLinkEmail para Novo Usuario:', email);
+            const emailResult = await sendMagicLinkEmail(email, tokenStr);
+            console.log('[DEBUG WEBHOOK] Resultado do envio (Novo Usuario):', emailResult);
+          } catch (err) {
+            console.error('[DEBUG WEBHOOK] Erro ao enviar Magic Link (Novo Usuario):', err);
           }
         }
       }

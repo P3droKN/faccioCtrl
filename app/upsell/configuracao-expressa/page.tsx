@@ -51,7 +51,7 @@ export default function ConfiguracaoExpressaUpsell() {
           {/* Pricing & CTA */}
           <div className="pt-6 border-t border-gray-100 text-center" dangerouslySetInnerHTML={{
           __html: `
-            <div style="text-align:center; width: 100%;" id="kiwify-upsell-kBycMUu" data-upsell-url="/upsell/auditoria" data-downsell-url="/obrigado">
+            <div style="text-align:center; width: 100%;" id="kiwify-upsell-kBycMUu" data-upsell-url="" data-downsell-url="">
               <button id="kiwify-upsell-trigger-kBycMUu" style="background-color:#22c55e;padding:16px 24px;cursor:pointer;color:#FFFFFF;font-weight:700;border-radius:12px;border:none;font-size:18px;width:100%;transition:all 0.2s;" onmouseover="this.style.backgroundColor='#16a34a'" onmouseout="this.style.backgroundColor='#22c55e'">
                 Sim, quero a Configuração Expressa
               </button>
@@ -65,7 +65,7 @@ export default function ConfiguracaoExpressaUpsell() {
         </div>
       </div>
 
-      <script src="https://snippets.kiwify.com/upsell/upsell.min.js" async></script>
+      <script src="https://snippets.kiwify.com/upsell/upsell.min.js"></script>
       
       {/* Força a cor do texto do dropdown (select) injetado pela Kiwify para ficar escuro e legível */}
       <style dangerouslySetInnerHTML={{__html: `
