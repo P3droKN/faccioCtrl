@@ -18,7 +18,7 @@ export default function ObrigadoPage() {
               Pagamento Aprovado com Sucesso! 🎉
             </h1>
             <p className="text-blue-100 text-lg max-w-lg mx-auto">
-              Muito obrigado pela confiança. Sua transação foi confirmada e as instruções já foram enviadas para o seu e-mail.
+              Muito obrigado pela confiança. Sua transação foi confirmada e as instruções já foram enviadas para o seu e-mail. <strong className="text-white">Lembre-se de conferir sua caixa de Spam ou Lixo Eletrônico.</strong>
             </p>
           </div>
         </div>
