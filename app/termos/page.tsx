@@ -50,7 +50,7 @@ export default function TermosPage() {
           <p>Podemos revisar estes Termos de Uso a qualquer momento. O uso continuado do serviço após alterações implica na aceitação da versão vigente.</p>
 
           <h2 className="text-xl font-bold text-[#1F3864] mt-8 mb-4">8. Lei aplicável e foro</h2>
-          <p>Estes Termos de Uso são regidos pelas leis da <strong>República Federativa do Brasil</strong>. Fica eleito o foro da comarca de Pedro Nicolodi Kerber (sua cidade/estado) para dirimir quaisquer controvérsias decorrentes destes termos, com renúncia a qualquer outro, por mais privilegiado que seja.</p>
+          <p>Estes Termos de Uso são regidos pelas leis da <strong>República Federativa do Brasil</strong>. Fica eleito o foro da comarca de Curitiba/PR para dirimir quaisquer controvérsias decorrentes destes termos, com renúncia a qualquer outro, por mais privilegiado que seja.</p>
 
           <h2 className="text-xl font-bold text-[#1F3864] mt-8 mb-4">9. Contato</h2>
           <p>Dúvidas sobre estes Termos de Uso podem ser enviadas para: <a href="mailto:suporteplataforma.pkn@gmail.com" className="text-blue-600 hover:underline">suporteplataforma.pkn@gmail.com</a>.</p>
