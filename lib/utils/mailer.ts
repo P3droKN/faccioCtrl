@@ -522,3 +522,99 @@ export async function sendMentoriaCustomerEmail(to: string, nomeCliente: string)
     return false;
   }
 }
+
+export async function sendAuditoriaCustomerEmail(to: string, nomeCliente: string) {
+  const SMTP_HOST = process.env.SMTP_HOST?.trim();
+  const SMTP_PORT = process.env.SMTP_PORT?.trim();
+  const SMTP_USER = process.env.SMTP_USER?.trim();
+  const SMTP_PASS = process.env.SMTP_PASS?.trim();
+  const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://faccioctrl.vercel.app';
+
+  if (!SMTP_HOST || !SMTP_USER || !SMTP_PASS) {
+    console.error('SMTP credentials missing in .env');
+    return false;
+  }
+
+  const isGmail = SMTP_HOST?.includes('gmail');
+
+  const transporter = nodemailer.createTransport(
+    isGmail 
+      ? {
+          service: 'gmail',
+          auth: {
+            user: SMTP_USER,
+            pass: SMTP_PASS,
+          },
+        }
+      : {
+          host: SMTP_HOST,
+          port: Number(SMTP_PORT) || 465,
+          secure: Number(SMTP_PORT) === 465,
+          auth: {
+            user: SMTP_USER,
+            pass: SMTP_PASS,
+          },
+          tls: {
+            rejectUnauthorized: false
+          }
+        }
+  );
+
+  const firstName = nomeCliente ? nomeCliente.split(' ')[0] : 'Empreendedor';
+
+  const html = `
+    <div style="font-family: 'Inter', sans-serif; background-color: #f3f4f6; margin: 0; padding: 40px 20px;">
+      <div style="max-w: 600px; margin: 0 auto; background-color: #ffffff; padding: 40px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+        
+        <div style="text-align: center; margin-bottom: 24px;">
+          <h1 style="color: #111827; margin-top: 0;">Módulo de Auditoria Liberado! 🔎</h1>
+        </div>
+        
+        <p style="color: #4b5563; font-size: 16px; line-height: 1.6;">
+          Olá, <strong>${firstName}</strong>!
+        </p>
+        <p style="color: #4b5563; font-size: 16px; line-height: 1.6;">
+          Seu pagamento foi confirmado com sucesso. O <strong>Módulo de Auditoria e Cobrança</strong> já está ativado na sua conta do FaccioCtrl, de forma vitalícia (sem mensalidades extras).
+        </p>
+        
+        <p style="color: #4b5563; font-size: 16px; line-height: 1.6;">
+          A partir de agora, o sistema monitora todos os atrasos e permite que você dispare mensagens automáticas de cobrança direto para o WhatsApp das facções com um único clique.
+        </p>
+
+        <div style="text-align: center; margin: 32px 0;">
+          <a href="${APP_URL}/dashboard/auditoria" style="display: inline-block; background-color: #2563eb; color: #ffffff; text-decoration: none; font-weight: bold; padding: 16px 32px; border-radius: 8px; font-size: 18px;">
+            ACESSAR PAINEL DE AUDITORIA
+          </a>
+        </div>
+        
+        <p style="color: #4b5563; font-size: 16px; line-height: 1.6;">
+          Se você estiver com o sistema aberto, basta atualizar a página (F5) para ver que o cadeado de bloqueio desapareceu e você já tem acesso total.
+        </p>
+        
+        <p style="color: #4b5563; font-size: 16px; line-height: 1.6; margin-top: 32px;">
+          Bons negócios e zero atrasos!
+          <br><br>
+          Um abraço,
+          <br>
+          <strong>Equipe FaccioCtrl</strong>
+        </p>
+        
+      </div>
+    </div>
+  `;
+
+  try {
+    const info = await transporter.sendMail({
+      from: \`"FaccioCtrl" <\${SMTP_USER}>\`,
+      to,
+      subject: '✅ Módulo de Auditoria Ativado com Sucesso',
+      html,
+    });
+
+    console.log('Customer Auditoria Message sent: %s', info.messageId);
+    return true;
+  } catch (err) {
+    console.error('Error sending customer auditoria email:', err);
+    return false;
+  }
+}

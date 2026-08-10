@@ -97,6 +97,8 @@ export async function POST(req: Request) {
             where: { email },
             data: { moduloAuditoria: true },
           });
+          const { sendAuditoriaCustomerEmail } = require('@/lib/utils/mailer');
+          await sendAuditoriaCustomerEmail(email, payload.Customer?.full_name);
         } else if (['order_refunded', 'chargeback'].includes(eventType)) {
           await prisma.user.update({
             where: { email },
