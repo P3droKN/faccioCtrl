@@ -39,9 +39,9 @@ export default function Home() {
           <div className="flex flex-wrap justify-center gap-8 text-sm text-gray-500 font-medium">
             <a href="#" className="hover:text-[#1F3864] transition-colors">Sobre</a>
             <a href="#precos" className="hover:text-[#1F3864] transition-colors">Preços</a>
-            <a href="#" className="hover:text-[#1F3864] transition-colors">Termos de Uso</a>
-            <a href="#" className="hover:text-[#1F3864] transition-colors">Privacidade</a>
-            <a href="#" className="hover:text-[#1F3864] transition-colors">Contato</a>
+            <a href="/termos" className="hover:text-[#1F3864] transition-colors">Termos de Uso</a>
+            <a href="/privacidade" className="hover:text-[#1F3864] transition-colors">Privacidade</a>
+            <a href="mailto:suporteplataforma.pkn@gmail.com" className="hover:text-[#1F3864] transition-colors">Contato</a>
           </div>
           <p className="text-sm text-gray-400">© {new Date().getFullYear()} FaccioCtrl. Todos os direitos reservados.</p>
         </div>
