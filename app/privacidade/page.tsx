@@ -23,7 +23,7 @@ export default function PrivacidadePage() {
           <h2 className="text-xl font-bold text-[#1F3864] mt-8 mb-4">1. Quem somos (Controlador dos Dados)</h2>
           <p>O FaccioCtrl é o controlador dos dados pessoais tratados por meio deste site e dos serviços oferecidos.</p>
           <ul className="list-disc pl-6 mb-4">
-            <li><strong>Responsável:</strong> Pedro Nicolo Dikerber</li>
+            <li><strong>Responsável:</strong> Pedro Nicolodi Kerber</li>
             <li><strong>Contato para assuntos de privacidade:</strong> suporteplataforma.pkn@gmail.com</li>
           </ul>
 
