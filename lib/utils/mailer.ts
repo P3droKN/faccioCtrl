@@ -605,7 +605,7 @@ export async function sendAuditoriaCustomerEmail(to: string, nomeCliente: string
 
   try {
     const info = await transporter.sendMail({
-      from: \`"FaccioCtrl" <\${SMTP_USER}>\`,
+      from: `"FaccioCtrl" <${SMTP_USER}>`,
       to,
       subject: '✅ Módulo de Auditoria Ativado com Sucesso',
       html,
