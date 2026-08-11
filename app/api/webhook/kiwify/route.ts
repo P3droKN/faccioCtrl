@@ -48,8 +48,9 @@ export async function POST(req: Request) {
     }
 
     let planoStatus: 'pro' | 'cancelado' | null = null;
-    let isExpressaConfig = (productId === 'b5e43db0-913e-11f1-a51e-157bea9120b3');
-    let isAuditoria = (productId === '73f80c70-92c3-11f1-bf15-e7e84c759762');
+    const productName = (payload.Product?.product_name || '').toLowerCase().trim();
+    let isExpressaConfig = (productId === 'b5e43db0-913e-11f1-a51e-157bea9120b3') || productName.includes('expressa');
+    let isAuditoria = (productId === '73f80c70-92c3-11f1-bf15-e7e84c759762') || productName.includes('auditoria');
 
     // 3. Mapeamento de Eventos (Assinatura Base)
     switch (eventType) {
