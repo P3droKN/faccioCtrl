@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Script from 'next/script';
 import { CheckCircle, Clock } from 'lucide-react';
 
 export default function ConfiguracaoExpressaUpsell() {
@@ -65,7 +66,7 @@ export default function ConfiguracaoExpressaUpsell() {
         </div>
       </div>
 
-      <script src="https://snippets.kiwify.com/upsell/upsell.min.js"></script>
+      <Script src="https://snippets.kiwify.com/upsell/upsell.min.js" strategy="afterInteractive" />
       
       {/* Força a cor do texto do dropdown (select) injetado pela Kiwify para ficar escuro e legível */}
       <style dangerouslySetInnerHTML={{__html: `

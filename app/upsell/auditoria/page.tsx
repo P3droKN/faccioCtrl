@@ -1,4 +1,5 @@
 import React from 'react';
+import Script from 'next/script';
 import { ShieldAlert, Zap, MessageCircle, BarChart3, Clock, CheckCircle } from 'lucide-react';
 
 export default function UpsellAuditoriaPage() {
@@ -80,7 +81,7 @@ export default function UpsellAuditoriaPage() {
             className="w-full flex justify-center"
             dangerouslySetInnerHTML={{
             __html: `
-              <div style="text-align:center; width: 100%;" id="kiwify-upsell-yjPCVq9" data-upsell-url="" data-downsell-url="">
+              <div style="text-align:center; width: 100%;" id="kiwify-upsell-yjPCVq9" data-upsell-url="https://faccioctrl.vercel.app/obrigado" data-downsell-url="https://faccioctrl.vercel.app/obrigado">
                 <button id="kiwify-upsell-trigger-yjPCVq9" style="background-color:#2563eb;padding:16px 24px;cursor:pointer;color:#FFFFFF;font-weight:700;border-radius:12px;border:none;font-size:18px;width:100%;max-width:400px;transition:all 0.2s;" onmouseover="this.style.backgroundColor='#1d4ed8'" onmouseout="this.style.backgroundColor='#2563eb'">
                   Sim, quero liberar a Auditoria!
                 </button>
@@ -91,7 +92,7 @@ export default function UpsellAuditoriaPage() {
             `
           }} />
 
-          <script src="https://snippets.kiwify.com/upsell/upsell.min.js"></script>
+          <Script src="https://snippets.kiwify.com/upsell/upsell.min.js" strategy="afterInteractive" />
 
           <div className="mt-8 flex items-center justify-center gap-2 text-sm text-gray-500">
             <CheckCircle className="w-4 h-4 text-teal-500" />
