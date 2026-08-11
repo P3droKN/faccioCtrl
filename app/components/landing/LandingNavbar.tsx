@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { Scissors } from 'lucide-react';
+import { trackEvent } from '@/lib/fbpixel';
 
 export default function LandingNavbar() {
 
@@ -25,7 +26,7 @@ export default function LandingNavbar() {
             <Link href="/login" className="text-white/90 hover:text-white font-medium text-xs sm:text-sm transition-colors">
               Entrar
             </Link>
-            <a href="https://pay.kiwify.com.br/UiNSqS2" className="bg-white text-[#1F3864] px-4 py-2 sm:px-6 sm:py-2.5 rounded-full font-bold text-xs sm:text-sm hover:bg-blue-50 transition-all shadow-[0_0_20px_rgba(255,255,255,0.2)] hover:shadow-[0_0_30px_rgba(255,255,255,0.4)] whitespace-nowrap">
+            <a href="https://pay.kiwify.com.br/UiNSqS2" onClick={() => trackEvent('InitiateCheckout')} className="bg-white text-[#1F3864] px-4 py-2 sm:px-6 sm:py-2.5 rounded-full font-bold text-xs sm:text-sm hover:bg-blue-50 transition-all shadow-[0_0_20px_rgba(255,255,255,0.2)] hover:shadow-[0_0_30px_rgba(255,255,255,0.4)] whitespace-nowrap">
               Assinar Agora
             </a>
           </div>

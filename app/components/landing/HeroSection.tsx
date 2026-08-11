@@ -1,6 +1,9 @@
+'use client';
+
 import Link from 'next/link';
 import { ArrowRight, CheckCircle2, TrendingDown, TrendingUp, Scissors, Search, Bell } from 'lucide-react';
 import ScrollReveal from './ScrollReveal';
+import { trackEvent } from '@/lib/fbpixel';
 
 export default function HeroSection() {
   return (
@@ -36,6 +39,7 @@ export default function HeroSection() {
             <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
               <a 
                 href="https://pay.kiwify.com.br/UiNSqS2" 
+                onClick={() => trackEvent('InitiateCheckout')}
                 className="w-full sm:w-auto px-10 py-5 bg-white hover:bg-gray-100 text-[#1F3864] rounded-full font-bold text-xl shadow-[0_0_40px_-10px_rgba(255,255,255,0.6)] transition-all hover:scale-105 flex items-center justify-center gap-2"
               >
                 Começar agora

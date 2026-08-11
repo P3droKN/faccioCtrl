@@ -1,5 +1,8 @@
+'use client';
+
 import { CheckCircle2 } from 'lucide-react';
 import ScrollReveal from './ScrollReveal';
+import { trackEvent } from '@/lib/fbpixel';
 
 export default function PricingSection() {
   return (
@@ -71,6 +74,7 @@ export default function PricingSection() {
 
               <a
                 href="https://pay.kiwify.com.br/UiNSqS2"
+                onClick={() => trackEvent('InitiateCheckout')}
                 className="w-full flex items-center justify-center gap-2 bg-gray-900 hover:bg-gray-800 text-white py-4 rounded-xl font-bold text-lg transition-all"
               >
                 Assinar Mensal
@@ -119,6 +123,7 @@ export default function PricingSection() {
 
               <a
                 href="https://pay.kiwify.com.br/bAH6nkn"
+                onClick={() => trackEvent('InitiateCheckout')}
                 className="w-full flex items-center justify-center gap-2 bg-blue-500 hover:bg-blue-400 text-white py-4 rounded-xl font-bold text-lg transition-all shadow-lg shadow-blue-500/30"
               >
                 Assinar Anual

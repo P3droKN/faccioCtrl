@@ -1,5 +1,8 @@
+'use client';
+
 import { ArrowRight, Scissors } from 'lucide-react';
 import ScrollReveal from './ScrollReveal';
+import { trackEvent } from '@/lib/fbpixel';
 
 export default function CtaFinalSection() {
   return (
@@ -26,6 +29,7 @@ export default function CtaFinalSection() {
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <a 
                 href="https://pay.kiwify.com.br/UiNSqS2" 
+                onClick={() => trackEvent('InitiateCheckout')}
                 className="w-full sm:w-auto inline-flex items-center justify-center gap-3 px-12 py-6 bg-white text-[#1F3864] text-xl font-bold rounded-full hover:bg-gray-100 transition-all shadow-[0_0_40px_rgba(255,255,255,0.3)] hover:shadow-[0_0_60px_rgba(255,255,255,0.5)] hover:scale-105"
               >
                 Começar agora
