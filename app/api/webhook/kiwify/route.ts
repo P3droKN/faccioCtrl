@@ -12,7 +12,7 @@ export async function POST(req: Request) {
     // 1. Signature Validation (HMAC-SHA1 timing-safe)
     const { searchParams } = new URL(req.url);
     const signature = searchParams.get('signature');
-    const token = process.env.KIWIFY_WEBHOOK_TOKEN;
+    const token = process.env.KIWIFY_WEBHOOK_SECRET || process.env.KIWIFY_WEBHOOK_TOKEN;
 
     if (!token || !signature) {
       return NextResponse.json({ message: 'Missing token or signature' }, { status: 403 });
