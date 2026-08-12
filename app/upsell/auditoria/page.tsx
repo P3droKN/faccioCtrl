@@ -76,23 +76,24 @@ export default function UpsellAuditoriaPage() {
             Por um pagamento único (sem mensalidades extras), você libera essa tela para sempre na sua conta FaccioCtrl. Economize horas de estresse e garanta que nenhuma peça se perca.
           </p>
           
-          <div 
-
-            className="w-full flex justify-center"
-            dangerouslySetInnerHTML={{
-            __html: `
-              <div style="text-align:center; width: 100%;" id="kiwify-upsell-yjPCVq9" data-upsell-url="https://faccioctrl.vercel.app/obrigado" data-downsell-url="https://faccioctrl.vercel.app/obrigado">
-                <button id="kiwify-upsell-trigger-yjPCVq9" style="background-color:#2563eb;padding:16px 24px;cursor:pointer;color:#FFFFFF;font-weight:700;border-radius:12px;border:none;font-size:18px;width:100%;max-width:400px;transition:all 0.2s;" onmouseover="this.style.backgroundColor='#1d4ed8'" onmouseout="this.style.backgroundColor='#2563eb'">
-                  Sim, quero liberar a Auditoria!
-                </button>
-                <div id="kiwify-upsell-cancel-trigger-yjPCVq9" style="margin-top:1.5rem;cursor:pointer;font-size:14px;color:#6b7280;text-decoration:underline;transition:color 0.2s;" onmouseover="this.style.color='#9ca3af'" onmouseout="this.style.color='#6b7280'">
-                  Não, prefiro cobrar os atrasos manualmente
-                </div>
+          <div className="w-full flex justify-center">
+            <div className="w-full text-center" id="kiwify-upsell-yjPCVq9" data-upsell-url="https://faccioctrl.vercel.app/obrigado" data-downsell-url="https://faccioctrl.vercel.app/obrigado">
+              <button 
+                id="kiwify-upsell-trigger-yjPCVq9" 
+                className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-6 rounded-xl w-full max-w-[400px] text-lg transition-colors border-none cursor-pointer"
+              >
+                Sim, quero liberar a Auditoria!
+              </button>
+              <div 
+                id="kiwify-upsell-cancel-trigger-yjPCVq9" 
+                className="mt-6 text-sm text-gray-500 hover:text-gray-400 underline cursor-pointer transition-colors"
+              >
+                Não, prefiro cobrar os atrasos manualmente
               </div>
-            `
-          }} />
+            </div>
+          </div>
 
-          <Script src="https://snippets.kiwify.com/upsell/upsell.min.js" strategy="afterInteractive" />
+          <Script src="https://snippets.kiwify.com/upsell/upsell.min.js" strategy="beforeInteractive" />
 
           <div className="mt-8 flex items-center justify-center gap-2 text-sm text-gray-500">
             <CheckCircle className="w-4 h-4 text-teal-500" />

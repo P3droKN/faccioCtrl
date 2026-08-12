@@ -50,23 +50,27 @@ export default function ConfiguracaoExpressaUpsell() {
           </div>
 
           {/* Pricing & CTA */}
-          <div className="pt-6 border-t border-gray-100 text-center" dangerouslySetInnerHTML={{
-          __html: `
-            <div style="text-align:center; width: 100%;" id="kiwify-upsell-kBycMUu" data-upsell-url="https://faccioctrl.vercel.app/upsell/auditoria" data-downsell-url="https://faccioctrl.vercel.app/upsell/auditoria">
-              <button id="kiwify-upsell-trigger-kBycMUu" style="background-color:#22c55e;padding:16px 24px;cursor:pointer;color:#FFFFFF;font-weight:700;border-radius:12px;border:none;font-size:18px;width:100%;transition:all 0.2s;" onmouseover="this.style.backgroundColor='#16a34a'" onmouseout="this.style.backgroundColor='#22c55e'">
+          <div className="pt-6 border-t border-gray-100 text-center">
+            <div className="w-full text-center" id="kiwify-upsell-kBycMUu" data-upsell-url="https://faccioctrl.vercel.app/upsell/auditoria" data-downsell-url="https://faccioctrl.vercel.app/upsell/auditoria">
+              <button 
+                id="kiwify-upsell-trigger-kBycMUu" 
+                className="bg-green-500 hover:bg-green-600 text-white font-bold py-4 px-6 rounded-xl w-full text-lg transition-colors border-none cursor-pointer"
+              >
                 Sim, quero a Configuração Expressa
               </button>
-              <div id="kiwify-upsell-cancel-trigger-kBycMUu" style="margin-top:1.5rem;cursor:pointer;font-size:14px;color:#9ca3af;text-decoration:underline;transition:color 0.2s;" onmouseover="this.style.color='#4b5563'" onmouseout="this.style.color='#9ca3af'">
+              <div 
+                id="kiwify-upsell-cancel-trigger-kBycMUu" 
+                className="mt-6 text-sm text-gray-400 hover:text-gray-600 underline cursor-pointer transition-colors"
+              >
                 Não, obrigado, prefiro configurar sozinho
               </div>
             </div>
-          `
-        }} />
+          </div>
 
         </div>
       </div>
 
-      <Script src="https://snippets.kiwify.com/upsell/upsell.min.js" strategy="afterInteractive" />
+      <Script src="https://snippets.kiwify.com/upsell/upsell.min.js" strategy="beforeInteractive" />
       
       {/* Força a cor do texto do dropdown (select) injetado pela Kiwify para ficar escuro e legível */}
       <style dangerouslySetInnerHTML={{__html: `
