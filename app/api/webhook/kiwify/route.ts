@@ -34,7 +34,13 @@ export async function POST(req: Request) {
     }
 
     // 2. Extração de Dados
-    const eventType = payload.order_status || payload.subscription_status || '';
+    let eventType = payload.order_status || payload.subscription_status || '';
+    
+    // Normalização de eventos do Kiwify
+    if (eventType === 'approved' || eventType === 'paid') eventType = 'order_approved';
+    if (eventType === 'refunded') eventType = 'order_refunded';
+    if (eventType === 'refused') eventType = 'order_rejected';
+
     const email = payload.Customer?.email;
     const productId = payload.Product?.product_id;
     const subscriptionId = payload.Subscription?.id;
