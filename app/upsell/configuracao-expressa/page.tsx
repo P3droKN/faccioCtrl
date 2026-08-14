@@ -65,6 +65,22 @@ export default function ConfiguracaoExpressaUpsell() {
                 Não, obrigado, prefiro configurar sozinho
               </div>
             </div>
+            {/* Script para repassar os tokens de sessão da Kiwify para a próxima página */}
+            <Script id="forward-kiwify-params" strategy="afterInteractive">
+              {`
+                setTimeout(() => {
+                  const query = window.location.search;
+                  if (query) {
+                    const container = document.getElementById('kiwify-upsell-kBycMUu');
+                    if (container) {
+                      const url = 'https://faccioctrl.vercel.app/upsell/auditoria';
+                      container.setAttribute('data-upsell-url', url + query);
+                      container.setAttribute('data-downsell-url', url + query);
+                    }
+                  }
+                }, 500);
+              `}
+            </Script>
           </div>
 
         </div>
