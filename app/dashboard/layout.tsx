@@ -173,9 +173,37 @@ export default async function DashboardLayout({ children }: { children: React.Re
       )}
 
       {/* Page content */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-10">
+      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-10 pb-24 md:pb-10">
         {isPro ? children : <SubscriptionGate initialStatus={session.plano} />}
       </main>
+
+      {/* Mobile Bottom Navigation */}
+      {isPro && (
+        <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-40 flex justify-around items-center h-16 px-2 safe-area-pb shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
+          <Link href="/dashboard" className="flex flex-col items-center justify-center p-2 text-gray-500 hover:text-[#1F3864]">
+            <LayoutDashboard className="w-5 h-5 mb-1" />
+            <span className="text-[10px] font-medium">Início</span>
+          </Link>
+          <Link href="/dashboard/faccoes" className="flex flex-col items-center justify-center p-2 text-gray-500 hover:text-[#1F3864]">
+            <Factory className="w-5 h-5 mb-1" />
+            <span className="text-[10px] font-medium">Facções</span>
+          </Link>
+          <Link href="/dashboard/ordens" className="flex flex-col items-center justify-center p-2 text-gray-500 hover:text-[#1F3864]">
+            <Package className="w-5 h-5 mb-1" />
+            <span className="text-[10px] font-medium">Ordens</span>
+          </Link>
+          <Link href="/dashboard/auditoria" className="flex flex-col items-center justify-center p-2 text-gray-500 hover:text-[#1F3864]">
+            <ShieldAlert className="w-5 h-5 mb-1" />
+            <span className="text-[10px] font-medium truncate max-w-[60px]">Auditoria</span>
+          </Link>
+          {process.env.NEXT_PUBLIC_FEATURE_FINANCEIRO === 'true' && (
+            <Link href="/dashboard/financeiro" className="flex flex-col items-center justify-center p-2 text-gray-500 hover:text-[#1F3864]">
+              <CircleDollarSign className="w-5 h-5 mb-1" />
+              <span className="text-[10px] font-medium">Finanças</span>
+            </Link>
+          )}
+        </nav>
+      )}
     </div>
   );
 }

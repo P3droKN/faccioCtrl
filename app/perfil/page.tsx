@@ -4,6 +4,9 @@ import { PrismaClient } from '@prisma/client';
 import { decrypt } from '../actions/auth';
 import PerfilTabs from './PerfilTabs';
 
+import { ChevronLeft } from 'lucide-react';
+import Link from 'next/link';
+
 const prisma = new PrismaClient();
 
 export default async function PerfilPage() {
@@ -29,6 +32,10 @@ export default async function PerfilPage() {
   return (
     <div className="max-w-4xl mx-auto space-y-6">
       <div>
+        <Link href="/dashboard" className="md:hidden inline-flex items-center gap-1 text-sm font-medium text-gray-500 hover:text-gray-900 mb-2 -ml-1 transition-colors">
+          <ChevronLeft className="w-4 h-4" />
+          Voltar
+        </Link>
         <h1 className="text-3xl font-extrabold text-[#1F3864]">Meu Perfil</h1>
         <p className="text-gray-500 mt-1">Gerencie seus dados, segurança e plano.</p>
       </div>

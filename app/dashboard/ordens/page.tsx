@@ -12,6 +12,7 @@ import {
   Scissors,
   Trash2,
 } from 'lucide-react';
+import Link from 'next/link';
 import { getOrdens, getFaccoesOptions, deleteOrdem } from '@/app/actions/ordens';
 import type { OrdemComCalculo } from '@/app/actions/ordens';
 import { STATUS_LABEL, STATUS_COLOR, STATUS_DOT, StatusOP } from '@/lib/utils/status-ordem';
@@ -129,6 +130,10 @@ export default function OrdensPage() {
       {/* Header da página */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
+          <Link href="/dashboard" className="md:hidden inline-flex items-center gap-1 text-sm font-medium text-gray-500 hover:text-gray-900 mb-2 -ml-1 transition-colors">
+            <ChevronLeft className="w-4 h-4" />
+            Voltar
+          </Link>
           <h1 className="text-2xl font-bold text-gray-900">Ordens de Produção</h1>
           <p className="text-sm text-gray-500 mt-0.5">
             {totalCount === 0
@@ -211,11 +216,17 @@ export default function OrdensPage() {
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-gray-100 bg-gray-50/80">
-                  {['Nº Ordem', 'Produto', 'Facção', 'Envio', 'Prazo', 'Enviado', 'Retornado', 'Pendente', 'Status', 'Obs.', ''].map((h) => (
-                    <th key={h} className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide whitespace-nowrap">
-                      {h}
-                    </th>
-                  ))}
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide whitespace-nowrap">Nº Ordem</th>
+                  <th className="hidden lg:table-cell px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide whitespace-nowrap">Produto</th>
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide whitespace-nowrap">Facção</th>
+                  <th className="hidden lg:table-cell px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide whitespace-nowrap">Envio</th>
+                  <th className="hidden sm:table-cell px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide whitespace-nowrap">Prazo</th>
+                  <th className="hidden md:table-cell px-4 py-3 text-center text-xs font-semibold text-gray-500 uppercase tracking-wide whitespace-nowrap">Enviado</th>
+                  <th className="hidden md:table-cell px-4 py-3 text-center text-xs font-semibold text-gray-500 uppercase tracking-wide whitespace-nowrap">Retornado</th>
+                  <th className="hidden sm:table-cell px-4 py-3 text-center text-xs font-semibold text-gray-500 uppercase tracking-wide whitespace-nowrap">Pendente</th>
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide whitespace-nowrap">Status</th>
+                  <th className="hidden xl:table-cell px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide whitespace-nowrap">Obs.</th>
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide whitespace-nowrap"></th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-50">
@@ -224,19 +235,19 @@ export default function OrdensPage() {
                     <td className="px-4 py-3.5 font-bold text-gray-900 whitespace-nowrap">
                       #{o.numeroOrdem}
                     </td>
-                    <td className="px-4 py-3.5 text-gray-700 font-medium whitespace-nowrap">
+                    <td className="hidden lg:table-cell px-4 py-3.5 text-gray-700 font-medium whitespace-nowrap">
                       {o.produto}
                     </td>
                     <td className="px-4 py-3.5 text-gray-600 whitespace-nowrap">
                       <div className="flex items-center gap-1.5">
                         <Scissors className="w-3.5 h-3.5 text-gray-400 shrink-0" />
-                        {o.faccaoNome}
+                        <span className="truncate max-w-[100px] sm:max-w-none">{o.faccaoNome}</span>
                       </div>
                     </td>
-                    <td className="px-4 py-3.5 text-gray-500 whitespace-nowrap">
+                    <td className="hidden lg:table-cell px-4 py-3.5 text-gray-500 whitespace-nowrap">
                       {new Date(o.dataEnvio).toLocaleDateString('pt-BR')}
                     </td>
-                    <td className="px-4 py-3.5 whitespace-nowrap">
+                    <td className="hidden sm:table-cell px-4 py-3.5 whitespace-nowrap">
                       <span
                         className={`font-medium ${
                           o.status === 'ATRASADA'
@@ -249,32 +260,32 @@ export default function OrdensPage() {
                         {new Date(o.prazoAcordado).toLocaleDateString('pt-BR')}
                       </span>
                     </td>
-                    <td className="px-4 py-3.5 text-gray-700 font-medium text-center">{o.qtdEnviada}</td>
-                    <td className="px-4 py-3.5 text-gray-700 font-medium text-center">{o.qtdRetornada}</td>
-                    <td className="px-4 py-3.5 font-bold text-gray-900 text-center">{o.qtdPendente}</td>
+                    <td className="hidden md:table-cell px-4 py-3.5 text-gray-700 font-medium text-center">{o.qtdEnviada}</td>
+                    <td className="hidden md:table-cell px-4 py-3.5 text-gray-700 font-medium text-center">{o.qtdRetornada}</td>
+                    <td className="hidden sm:table-cell px-4 py-3.5 font-bold text-gray-900 text-center">{o.qtdPendente}</td>
                     <td className="px-4 py-3.5 whitespace-nowrap">
                       <span
                         className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold ${STATUS_COLOR[o.status]}`}
                       >
-                        <span className={`w-1.5 h-1.5 rounded-full ${STATUS_DOT[o.status]}`} />
-                        {STATUS_LABEL[o.status]}
+                        <span className={`w-1.5 h-1.5 rounded-full ${STATUS_DOT[o.status]} hidden sm:block`} />
+                        <span className="truncate max-w-[70px] sm:max-w-none">{STATUS_LABEL[o.status]}</span>
                       </span>
                     </td>
-                    <td className="px-4 py-3.5 text-gray-400 max-w-[140px] truncate" title={o.observacao ?? ''}>
+                    <td className="hidden xl:table-cell px-4 py-3.5 text-gray-400 max-w-[140px] truncate" title={o.observacao ?? ''}>
                       {o.observacao || '—'}
                     </td>
-                    <td className="px-4 py-3.5">
-                      <div className="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <td className="px-2 sm:px-4 py-3.5">
+                      <div className="flex items-center justify-end gap-1 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
                         <button
                           onClick={() => abrirModalEditar(o)}
-                          className="p-2 rounded-lg text-gray-400 hover:text-blue-600 hover:bg-blue-50 transition-colors"
+                          className="p-1.5 sm:p-2 rounded-lg text-gray-400 hover:text-blue-600 hover:bg-blue-50 transition-colors"
                           title="Editar"
                         >
                           <Pencil className="w-4 h-4" />
                         </button>
                         <button
                           onClick={() => abrirModalExcluir(o)}
-                          className="p-2 rounded-lg text-gray-400 hover:text-red-600 hover:bg-red-50 transition-colors"
+                          className="p-1.5 sm:p-2 rounded-lg text-gray-400 hover:text-red-600 hover:bg-red-50 transition-colors"
                           title="Excluir"
                         >
                           <Trash2 className="w-4 h-4" />

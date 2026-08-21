@@ -2,7 +2,7 @@ import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { PrismaClient } from '@prisma/client';
 import { decrypt } from '@/app/actions/auth';
-import { ShieldAlert, AlertTriangle, MessageCircle, Lock, Clock } from 'lucide-react';
+import { ShieldAlert, AlertTriangle, MessageCircle, Lock, Clock, ChevronLeft } from 'lucide-react';
 import Link from 'next/link';
 
 const prisma = new PrismaClient();
@@ -10,7 +10,7 @@ const prisma = new PrismaClient();
 // Helper to format phone number for WhatsApp API
 function formatWhatsApp(phone: string | null) {
   if (!phone) return '';
-  let cleaned = phone.replace(/\\D/g, '');
+  let cleaned = phone.replace(/\D/g, '');
   if (cleaned.length === 10 || cleaned.length === 11) {
     cleaned = '55' + cleaned;
   }
@@ -69,6 +69,10 @@ export default async function AuditoriaPage() {
     <div className="max-w-6xl mx-auto space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
+          <Link href="/dashboard" className="md:hidden inline-flex items-center gap-1 text-sm font-medium text-gray-500 hover:text-gray-900 mb-2 -ml-1 transition-colors">
+            <ChevronLeft className="w-4 h-4" />
+            Voltar
+          </Link>
           <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
             <ShieldAlert className="w-6 h-6 text-red-500" />
             Auditoria de Atrasos

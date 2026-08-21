@@ -1,9 +1,10 @@
 'use client';
 
 import { useState, useEffect, useCallback, useTransition } from 'react';
-import { Plus, Factory, Pencil, Trash2, PowerOff, Loader2 } from 'lucide-react';
+import { Plus, Factory, Pencil, Trash2, PowerOff, Loader2, ChevronLeft } from 'lucide-react';
 import { getFaccoes, deleteFaccao } from '@/app/actions/faccoes';
 import { FaccaoModal } from './components/FaccaoModal';
+import Link from 'next/link';
 
 interface Faccao {
   id: number;
@@ -87,6 +88,10 @@ export default function FaccoesPage() {
       {/* Header da página */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
+          <Link href="/dashboard" className="md:hidden inline-flex items-center gap-1 text-sm font-medium text-gray-500 hover:text-gray-900 mb-2 -ml-1 transition-colors">
+            <ChevronLeft className="w-4 h-4" />
+            Voltar
+          </Link>
           <h1 className="text-2xl font-bold text-gray-900">Facções</h1>
           <p className="text-sm text-gray-500 mt-0.5">
             {faccoes.length === 0
@@ -170,8 +175,8 @@ export default function FaccoesPage() {
                     <td className="px-4 py-3.5 text-gray-500 whitespace-nowrap">
                       {f._count?.ordens} OP{f._count?.ordens !== 1 ? 's' : ''}
                     </td>
-                    <td className="px-4 py-3.5">
-                      <div className="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <td className="px-2 sm:px-4 py-3.5">
+                      <div className="flex items-center justify-end gap-1 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
                         <button
                           onClick={() => abrirModalEditar(f)}
                           className="p-2 rounded-lg text-gray-400 hover:text-blue-600 hover:bg-blue-50 transition-colors"

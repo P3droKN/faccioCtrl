@@ -1,8 +1,9 @@
 'use client';
 
 import { useState, useEffect, useCallback, useTransition } from 'react';
-import { Plus, DollarSign, TrendingUp, TrendingDown, CheckCircle2, Wallet, Factory } from 'lucide-react';
+import { Plus, DollarSign, TrendingUp, TrendingDown, CheckCircle2, Wallet, Factory, ChevronLeft } from 'lucide-react';
 import { redirect } from 'next/navigation';
+import Link from 'next/link';
 import { getTransacoes, getResumoFinanceiro, marcarComoPago } from '@/app/actions/financeiro';
 import { TransacaoModal } from './components/TransacaoModal';
 
@@ -86,14 +87,14 @@ export default function FinanceiroPage() {
             </thead>
             <tbody className="divide-y divide-gray-50">
               {data.map((t) => (
-                <tr key={t.id} className="hover:bg-gray-50/60 transition-colors">
+                <tr key={t.id} className="hover:bg-gray-50/60 transition-colors group">
                   <td className="px-4 py-3.5 font-medium text-gray-900 whitespace-nowrap">
                     {t.faccao?.nome ? (
                       <div className="flex items-center gap-1.5"><Factory className="w-3.5 h-3.5 text-gray-400"/> {t.faccao.nome}</div>
                     ) : '—'}
                   </td>
-                  <td className="px-4 py-3.5 text-gray-700 whitespace-nowrap">{t.categoria}</td>
-                  <td className="px-4 py-3.5 text-gray-500 truncate max-w-[200px]">{t.descricao || '—'}</td>
+                  <td className="hidden lg:table-cell px-4 py-3.5 text-gray-700 whitespace-nowrap">{t.categoria}</td>
+                  <td className="hidden md:table-cell px-4 py-3.5 text-gray-500 truncate max-w-[200px]">{t.descricao || '—'}</td>
                   <td className="px-4 py-3.5 font-bold whitespace-nowrap" style={{ color: t.tipo === 'ENTRADA' ? '#16a34a' : '#dc2626' }}>
                     {formatCurrency(Number(t.valor))}
                   </td>
@@ -109,16 +110,18 @@ export default function FinanceiroPage() {
                       {t.status}
                     </span>
                   </td>
-                  <td className="px-4 py-3.5">
+                  <td className="px-2 sm:px-4 py-3.5">
                     {t.status !== 'PAGO' && (
-                      <button
-                        onClick={() => handleMarcarComoPago(t.id)}
-                        disabled={isPending}
-                        className="text-gray-400 hover:text-green-600 transition-colors p-1 rounded-lg hover:bg-green-50"
-                        title="Marcar como Pago"
-                      >
-                        <CheckCircle2 className="w-5 h-5" />
-                      </button>
+                      <div className="flex items-center justify-end gap-1 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
+                        <button
+                          onClick={() => handleMarcarComoPago(t.id)}
+                          disabled={isPending}
+                          className="text-gray-400 hover:text-green-600 transition-colors p-1.5 sm:p-2 rounded-lg hover:bg-green-50"
+                          title="Marcar como Pago"
+                        >
+                          <CheckCircle2 className="w-5 h-5" />
+                        </button>
+                      </div>
                     )}
                   </td>
                 </tr>
@@ -135,6 +138,10 @@ export default function FinanceiroPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
+          <Link href="/dashboard" className="md:hidden inline-flex items-center gap-1 text-sm font-medium text-gray-500 hover:text-gray-900 mb-2 -ml-1 transition-colors">
+            <ChevronLeft className="w-4 h-4" />
+            Voltar
+          </Link>
           <h1 className="text-2xl font-bold text-gray-900">Financeiro</h1>
           <p className="text-sm text-gray-500 mt-0.5">Controle de pagamentos e recebimentos</p>
         </div>

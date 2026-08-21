@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useTransition } from 'react';
 import Link from 'next/link';
-import { Factory, Calendar, TrendingUp, AlertTriangle, CheckCircle, Package, ArrowUpDown, ChevronUp, ChevronDown } from 'lucide-react';
+import { Factory, Calendar, TrendingUp, AlertTriangle, CheckCircle, Package, ArrowUpDown, ChevronUp, ChevronDown, ChevronLeft } from 'lucide-react';
 import { getDesempenhoFaccoes, type Período, type FaccaoMetricas, type DesempenhoData } from '@/app/actions/desempenho';
 
 type SortColumn = 'codigo' | 'nome' | 'totalOrdens' | 'ordensConcluidas' | 'ordensAtrasadas' | 'ordensEmAndamento' | 'totalPecasEnviadas' | 'percentualAtraso';
@@ -126,6 +126,10 @@ export default function DesempenhoPage() {
       {/* HEADER + FILTRO */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
+          <Link href="/dashboard" className="md:hidden inline-flex items-center gap-1 text-sm font-medium text-gray-500 hover:text-gray-900 mb-2 -ml-1 transition-colors">
+            <ChevronLeft className="w-4 h-4" />
+            Voltar
+          </Link>
           <h1 className="text-2xl font-bold text-gray-900">Desempenho</h1>
           <p className="text-sm text-gray-500 mt-0.5">Métricas e acompanhamento das suas facções</p>
         </div>
