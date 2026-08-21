@@ -1,7 +1,7 @@
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { decrypt, logoutAction } from '../actions/auth';
-import { Scissors, LogOut, LayoutDashboard, Package, Factory, TrendingUp, ShieldAlert, FileText, Users } from 'lucide-react';
+import { Scissors, LogOut, LayoutDashboard, Package, Factory, TrendingUp, ShieldAlert, FileText, Users, CircleDollarSign } from 'lucide-react';
 import Link from 'next/link';
 import { PrismaClient } from '@prisma/client';
 import SubscriptionGate from './components/SubscriptionGate';
@@ -113,6 +113,15 @@ export default async function DashboardLayout({ children }: { children: React.Re
               <ShieldAlert className="w-4 h-4" />
               Auditoria {user?.moduloAuditoria ? '' : '🔒'}
             </Link>
+            {process.env.NEXT_PUBLIC_FEATURE_FINANCEIRO === 'true' && (
+              <Link
+                href="/dashboard/financeiro"
+                className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-gray-600 hover:text-[#1F3864] hover:bg-blue-50 transition-colors"
+              >
+                <CircleDollarSign className="w-4 h-4" />
+                Financeiro
+              </Link>
+            )}
           </nav>
         )}
 

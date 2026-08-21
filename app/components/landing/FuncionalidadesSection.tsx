@@ -1,4 +1,4 @@
-import { CheckCircle2, Clock, AlertTriangle, TrendingDown } from 'lucide-react';
+import { CheckCircle2, Clock, AlertTriangle, TrendingDown, CircleDollarSign } from 'lucide-react';
 import ScrollReveal from './ScrollReveal';
 
 export default function FuncionalidadesSection() {
@@ -189,6 +189,67 @@ export default function FuncionalidadesSection() {
               </div>
             </ScrollReveal>
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-amber-100 rounded-full blur-[100px] -z-10"></div>
+          </div>
+        </div>
+
+        {/* Funcionalidade 4 - Financeiro */}
+        <div className="flex flex-col-reverse lg:flex-row items-center gap-16">
+          <div className="flex-1 w-full relative">
+            <ScrollReveal delay={200} className="relative z-10">
+              <div className="bg-gray-50 border border-gray-200 rounded-3xl p-6 shadow-2xl shadow-emerald-900/10 transform -rotate-1 hover:rotate-0 transition-transform duration-500">
+                <div className="flex items-center justify-between border-b border-gray-200 pb-4 mb-4">
+                  <div className="font-bold text-gray-800">Controle Financeiro</div>
+                </div>
+                <div className="space-y-4">
+                  <div className="bg-white p-5 rounded-xl border border-gray-100 shadow-sm relative overflow-hidden">
+                    <div className="absolute left-0 top-0 bottom-0 w-1 bg-green-500"></div>
+                    <div className="flex justify-between items-center mb-2">
+                      <div className="font-bold text-gray-900">Total a Receber</div>
+                      <div className="text-green-600 font-bold text-xl flex items-center gap-1">
+                        R$ 15.420,00
+                      </div>
+                    </div>
+                    <div className="text-xs text-gray-500 flex justify-between">
+                      <span>Vendas e Faturamento</span>
+                      <span className="text-green-600 font-medium">Em dia</span>
+                    </div>
+                  </div>
+                  
+                  <div className="bg-white p-5 rounded-xl border border-gray-100 shadow-sm relative overflow-hidden">
+                    <div className="absolute left-0 top-0 bottom-0 w-1 bg-red-500"></div>
+                    <div className="flex justify-between items-center mb-2">
+                      <div className="font-bold text-gray-900">Total a Pagar</div>
+                      <div className="text-red-600 font-bold text-xl flex items-center gap-1">
+                        R$ 3.850,00
+                      </div>
+                    </div>
+                    <div className="text-xs text-gray-500 flex justify-between">
+                      <span>Pagamentos a Facções</span>
+                      <span className="text-red-600 font-medium">Próximos 30 dias</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </ScrollReveal>
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-emerald-100 rounded-full blur-[100px] -z-10"></div>
+          </div>
+          <div className="flex-1">
+            <ScrollReveal>
+              <h3 className="text-3xl md:text-5xl font-extrabold text-gray-900 leading-tight mb-6 tracking-tight">
+                Controle financeiro integrado.
+              </h3>
+              <p className="text-lg text-gray-600 leading-relaxed mb-8">
+                Tudo no mesmo lugar. Registre facilmente os pagamentos que você precisa fazer para as facções e o faturamento das suas vendas. Tenha uma visão clara do seu saldo e nunca mais perca o controle do caixa da confecção.
+              </p>
+              <ul className="space-y-4">
+                <li className="flex items-center gap-3 font-medium text-gray-700">
+                  <CheckCircle2 className="w-5 h-5 text-emerald-600" /> Contas a pagar e receber
+                </li>
+                <li className="flex items-center gap-3 font-medium text-gray-700">
+                  <CheckCircle2 className="w-5 h-5 text-emerald-600" /> Vinculado à sua produção
+                </li>
+              </ul>
+            </ScrollReveal>
           </div>
         </div>
 

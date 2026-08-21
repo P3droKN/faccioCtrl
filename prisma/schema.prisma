@@ -30,6 +30,7 @@ model User {
   accessTokens               AccessToken[]
   faccoes                    Faccao[]
   ordens                     Ordem[]
+  transacoes                 TransacaoFinanceira[]
   resetTokens                PasswordResetToken[]
 }
 
@@ -68,6 +69,7 @@ model Faccao {
   updatedAt DateTime @updatedAt @map("updated_at")
   user      User     @relation(fields: [userId], references: [id])
   ordens    Ordem[]
+  transacoes TransacaoFinanceira[]
 
   @@unique([userId, codigo])
   @@map("faccoes")
@@ -88,8 +90,48 @@ model Ordem {
   updatedAt     DateTime @updatedAt @map("updated_at")
   faccao        Faccao   @relation(fields: [faccaoId], references: [id])
   user          User     @relation(fields: [userId], references: [id])
+  transacoes    TransacaoFinanceira[]
 
   @@unique([userId, numeroOrdem])
   @@index([faccaoId])
   @@map("ordens_producao")
 }
+
+enum TipoTransacao {
+  ENTRADA
+  SAIDA
+}
+
+enum StatusTransacao {
+  PENDENTE
+  PAGO
+  ATRASADO
+}
+
+model TransacaoFinanceira {
+  id              Int             @id @default(autoincrement())
+  tipo            TipoTransacao
+  categoria       String
+  descricao       String?
+  valor           Decimal         @db.Decimal(10, 2)
+  dataVencimento  DateTime        @map("data_vencimento") @db.Date
+  dataPagamento   DateTime?       @map("data_pagamento") @db.Date
+  status          StatusTransacao @default(PENDENTE)
+  formaPagamento  String?         @map("forma_pagamento")
+  
+  faccaoId        Int?            @map("faccao_id")
+  ordemProducaoId Int?            @map("ordem_producao_id")
+  userId          Int             @map("user_id")
+
+  createdAt       DateTime        @default(now()) @map("created_at")
+  updatedAt       DateTime        @updatedAt @map("updated_at")
+
+  user            User            @relation(fields: [userId], references: [id])
+  faccao          Faccao?         @relation(fields: [faccaoId], references: [id])
+  ordem           Ordem?          @relation(fields: [ordemProducaoId], references: [id])
+
+  @@index([userId])
+  @@index([faccaoId])
+  @@map("transacoes_financeiras")
+}
+
