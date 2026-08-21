@@ -1,10 +1,10 @@
 'use client';
 
 import { useState, useEffect, useCallback, useTransition } from 'react';
-import { Plus, DollarSign, TrendingUp, TrendingDown, CheckCircle2, Wallet, Factory, ChevronLeft } from 'lucide-react';
+import { Plus, DollarSign, TrendingUp, TrendingDown, CheckCircle2, Wallet, Factory, ChevronLeft, Pencil, Trash2 } from 'lucide-react';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
-import { getTransacoes, getResumoFinanceiro, marcarComoPago } from '@/app/actions/financeiro';
+import { getTransacoes, getResumoFinanceiro, marcarComoPago, deleteTransacao } from '@/app/actions/financeiro';
 import { TransacaoModal } from './components/TransacaoModal';
 
 // This is client-side, but ideally the feature flag check is also applied here or in layout.
@@ -31,6 +31,10 @@ export default function FinanceiroPage() {
   const [loading, setLoading] = useState(true);
   
   const [modalAberto, setModalAberto] = useState(false);
+  const [modalModo, setModalModo] = useState<'criar' | 'editar'>('criar');
+  const [transacaoEditando, setTransacaoEditando] = useState<Transacao | undefined>();
+  const [deleteModal, setDeleteModal] = useState<{ aberto: boolean; id?: number }>({ aberto: false });
+  const [isDeleting, setIsDeleting] = useState(false);
   const [isPending, startTransition] = useTransition();
 
   const fetchData = useCallback(async () => {
@@ -57,6 +61,21 @@ export default function FinanceiroPage() {
       if (res.error) alert(res.error);
       else fetchData();
     });
+  };
+
+  const handleExcluir = async () => {
+    if (!deleteModal.id) return;
+    setIsDeleting(true);
+    try {
+      const res = await deleteTransacao(deleteModal.id);
+      if (res.error) alert(res.error);
+      else {
+        setDeleteModal({ aberto: false });
+        fetchData();
+      }
+    } finally {
+      setIsDeleting(false);
+    }
   };
 
   const formatCurrency = (val: number) => {
@@ -111,8 +130,8 @@ export default function FinanceiroPage() {
                     </span>
                   </td>
                   <td className="px-2 sm:px-4 py-3.5">
-                    {t.status !== 'PAGO' && (
-                      <div className="flex items-center justify-end gap-1 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
+                    <div className="flex items-center justify-end gap-1 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
+                      {t.status !== 'PAGO' && (
                         <button
                           onClick={() => handleMarcarComoPago(t.id)}
                           disabled={isPending}
@@ -121,8 +140,22 @@ export default function FinanceiroPage() {
                         >
                           <CheckCircle2 className="w-5 h-5" />
                         </button>
-                      </div>
-                    )}
+                      )}
+                      <button
+                        onClick={() => { setModalModo('editar'); setTransacaoEditando(t); setModalAberto(true); }}
+                        className="text-gray-400 hover:text-blue-600 transition-colors p-1.5 sm:p-2 rounded-lg hover:bg-blue-50"
+                        title="Editar"
+                      >
+                        <Pencil className="w-4 h-4" />
+                      </button>
+                      <button
+                        onClick={() => setDeleteModal({ aberto: true, id: t.id })}
+                        className="text-gray-400 hover:text-red-600 transition-colors p-1.5 sm:p-2 rounded-lg hover:bg-red-50"
+                        title="Excluir"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))}
@@ -146,7 +179,7 @@ export default function FinanceiroPage() {
           <p className="text-sm text-gray-500 mt-0.5">Controle de pagamentos e recebimentos</p>
         </div>
         <button
-          onClick={() => setModalAberto(true)}
+          onClick={() => { setModalModo('criar'); setTransacaoEditando(undefined); setModalAberto(true); }}
           className="flex items-center gap-2 px-5 py-2.5 bg-[#1F3864] hover:bg-blue-800 text-white text-sm font-bold rounded-xl transition-all shadow-lg shadow-blue-900/20 hover:-translate-y-0.5"
         >
           <Plus className="w-4 h-4" />
@@ -213,12 +246,44 @@ export default function FinanceiroPage() {
 
       {modalAberto && (
         <TransacaoModal
+          modo={modalModo}
+          transacao={transacaoEditando}
           onClose={() => setModalAberto(false)}
           onSuccess={() => {
             fetchData();
             setModalAberto(false);
           }}
         />
+      )}
+
+      {deleteModal.aberto && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-gray-900/60 backdrop-blur-sm">
+          <div className="bg-white rounded-2xl w-full max-w-sm shadow-2xl overflow-hidden p-6 text-center animate-in zoom-in-95 duration-200">
+            <div className="w-12 h-12 bg-red-100 text-red-600 rounded-full flex items-center justify-center mx-auto mb-4">
+              <Trash2 className="w-6 h-6" />
+            </div>
+            <h3 className="text-lg font-bold text-gray-900 mb-2">Excluir lançamento?</h3>
+            <p className="text-gray-500 text-sm mb-6">
+              Essa ação não pode ser desfeita. O lançamento será permanentemente apagado.
+            </p>
+            <div className="flex items-center gap-3">
+              <button
+                onClick={() => setDeleteModal({ aberto: false })}
+                disabled={isDeleting}
+                className="flex-1 py-2.5 text-sm font-semibold text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-xl transition-colors"
+              >
+                Cancelar
+              </button>
+              <button
+                onClick={handleExcluir}
+                disabled={isDeleting}
+                className="flex-1 py-2.5 text-sm font-bold text-white bg-red-600 hover:bg-red-700 rounded-xl shadow-lg shadow-red-600/20 transition-all hover:-translate-y-0.5 disabled:opacity-70 flex items-center justify-center gap-2"
+              >
+                {isDeleting ? <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : 'Excluir'}
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

@@ -2,15 +2,17 @@
 
 import { useState, useTransition, useEffect } from 'react';
 import { X, Loader2 } from 'lucide-react';
-import { createTransacao } from '@/app/actions/financeiro';
+import { createTransacao, updateTransacao } from '@/app/actions/financeiro';
 import { getFaccoes } from '@/app/actions/faccoes';
 
 interface Props {
+  modo: 'criar' | 'editar';
+  transacao?: any;
   onClose: () => void;
   onSuccess: () => void;
 }
 
-export function TransacaoModal({ onClose, onSuccess }: Props) {
+export function TransacaoModal({ modo, transacao, onClose, onSuccess }: Props) {
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState('');
   const [faccoes, setFaccoes] = useState<{id: number, nome: string}[]>([]);
@@ -30,7 +32,13 @@ export function TransacaoModal({ onClose, onSuccess }: Props) {
     const formData = new FormData(e.currentTarget);
     
     startTransition(async () => {
-      const result = await createTransacao(formData);
+      let result;
+      if (modo === 'editar' && transacao?.id) {
+        result = await updateTransacao(transacao.id, formData);
+      } else {
+        result = await createTransacao(formData);
+      }
+      
       if (result.error) {
         setError(result.error);
       } else {
@@ -38,6 +46,16 @@ export function TransacaoModal({ onClose, onSuccess }: Props) {
       }
     });
   }
+
+  const defaultValues = modo === 'editar' && transacao ? {
+    tipo: transacao.tipo,
+    valor: transacao.valor,
+    categoria: transacao.categoria,
+    faccaoId: transacao.faccaoId || transacao.faccao?.id || '',
+    dataVencimento: transacao.dataVencimento ? new Date(transacao.dataVencimento).toISOString().split('T')[0] : '',
+    formaPagamento: transacao.formaPagamento || '',
+    descricao: transacao.descricao || '',
+  } : {};
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-gray-900/60 backdrop-blur-sm">
@@ -67,11 +85,16 @@ export function TransacaoModal({ onClose, onSuccess }: Props) {
               <select 
                 name="tipo" 
                 required
-                className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 text-gray-900 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none font-medium transition-all"
+                defaultValue={defaultValues.tipo}
+                disabled={modo === 'editar'}
+                className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 text-gray-900 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none font-medium transition-all disabled:opacity-50"
               >
                 <option value="SAIDA">Saída (A Pagar)</option>
                 <option value="ENTRADA">Entrada (A Receber)</option>
               </select>
+              {modo === 'editar' && (
+                <input type="hidden" name="tipo" value={defaultValues.tipo} />
+              )}
             </div>
             
             <div className="space-y-1.5">
@@ -82,6 +105,7 @@ export function TransacaoModal({ onClose, onSuccess }: Props) {
                 step="0.01"
                 min="0.01"
                 required
+                defaultValue={defaultValues.valor}
                 placeholder="0,00"
                 className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 text-gray-900 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
               />
@@ -94,6 +118,7 @@ export function TransacaoModal({ onClose, onSuccess }: Props) {
               type="text" 
               name="categoria" 
               required
+              defaultValue={defaultValues.categoria}
               placeholder="Ex: Pagamento Facção, Recebimento Cliente..."
               className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 text-gray-900 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
             />
@@ -103,6 +128,7 @@ export function TransacaoModal({ onClose, onSuccess }: Props) {
             <label className="text-sm font-semibold text-gray-700">Vínculo com Facção (Opcional)</label>
             <select 
               name="faccaoId" 
+              defaultValue={defaultValues.faccaoId}
               className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 text-gray-900 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none font-medium transition-all"
             >
               <option value="">Nenhuma</option>
@@ -119,6 +145,7 @@ export function TransacaoModal({ onClose, onSuccess }: Props) {
                 type="date" 
                 name="dataVencimento"
                 required
+                defaultValue={defaultValues.dataVencimento}
                 className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 text-gray-900 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
               />
             </div>
@@ -127,6 +154,7 @@ export function TransacaoModal({ onClose, onSuccess }: Props) {
               <input 
                 type="text" 
                 name="formaPagamento"
+                defaultValue={defaultValues.formaPagamento}
                 placeholder="Ex: PIX, Boleto"
                 className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 text-gray-900 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
               />
@@ -138,6 +166,7 @@ export function TransacaoModal({ onClose, onSuccess }: Props) {
             <textarea 
               name="descricao" 
               rows={2}
+              defaultValue={defaultValues.descricao}
               className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 text-gray-900 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all resize-none"
             />
           </div>
@@ -157,7 +186,7 @@ export function TransacaoModal({ onClose, onSuccess }: Props) {
               className="flex items-center gap-2 px-6 py-2.5 bg-[#1F3864] text-white text-sm font-bold rounded-xl shadow-lg shadow-blue-900/20 hover:bg-blue-800 transition-all hover:-translate-y-0.5 disabled:opacity-70 disabled:hover:translate-y-0"
             >
               {isPending && <Loader2 className="w-4 h-4 animate-spin" />}
-              Salvar Lançamento
+              {modo === 'editar' ? 'Salvar Alterações' : 'Salvar Lançamento'}
             </button>
           </div>
         </form>

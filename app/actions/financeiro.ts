@@ -126,6 +126,92 @@ export async function createTransacao(formData: FormData) {
   return { success: true };
 }
 
+// ─── Atualizar Lançamento ──────────────────────────────────────────────────────────
+
+export async function updateTransacao(id: number, formData: FormData) {
+  const userId = await getUserIdFromSession();
+
+  const tipo = formData.get('tipo') as TipoTransacao;
+  const categoria = formData.get('categoria') as string;
+  const descricao = formData.get('descricao') as string;
+  const valorStr = formData.get('valor') as string;
+  const dataVencimentoStr = formData.get('dataVencimento') as string;
+  const formaPagamento = formData.get('formaPagamento') as string;
+  const faccaoIdStr = formData.get('faccaoId') as string;
+  
+  const valor = parseFloat(valorStr);
+
+  if (!tipo || !categoria || isNaN(valor) || valor <= 0 || !dataVencimentoStr) {
+    return { error: 'Preencha os campos obrigatórios corretamente.' };
+  }
+
+  const faccaoId = faccaoIdStr ? parseInt(faccaoIdStr) : null;
+  const dataVencimento = new Date(dataVencimentoStr);
+
+  const transacao = await prisma.transacaoFinanceira.findFirst({
+    where: { id, userId },
+  });
+
+  if (!transacao) {
+    return { error: 'Transação não encontrada.' };
+  }
+
+  let status = transacao.status;
+  if (status !== 'PAGO') {
+    const today = new Date();
+    today.setHours(0,0,0,0);
+    status = dataVencimento < today ? 'ATRASADO' : 'PENDENTE';
+  }
+
+  try {
+    await prisma.transacaoFinanceira.update({
+      where: { id },
+      data: {
+        tipo,
+        categoria,
+        descricao: descricao || null,
+        valor,
+        dataVencimento,
+        status,
+        formaPagamento: formaPagamento || null,
+        faccaoId
+      },
+    });
+  } catch (err) {
+    console.error('Erro ao atualizar transação:', err);
+    return { error: 'Erro inesperado ao salvar o lançamento.' };
+  }
+
+  revalidatePath('/dashboard/financeiro');
+  return { success: true };
+}
+
+// ─── Excluir Lançamento ──────────────────────────────────────────────────────────
+
+export async function deleteTransacao(id: number) {
+  const userId = await getUserIdFromSession();
+
+  const transacao = await prisma.transacaoFinanceira.findFirst({
+    where: { id, userId },
+  });
+
+  if (!transacao) {
+    return { error: 'Transação não encontrada.' };
+  }
+
+  try {
+    await prisma.transacaoFinanceira.delete({
+      where: { id },
+    });
+  } catch (err) {
+    console.error('Erro ao excluir transação:', err);
+    return { error: 'Erro inesperado ao excluir o lançamento.' };
+  }
+
+  revalidatePath('/dashboard/financeiro');
+  return { success: true };
+}
+
 // ─── Marcar como Pago ─────────────────────────────────────────────────────────
 
 export async function marcarComoPago(id: number) {
