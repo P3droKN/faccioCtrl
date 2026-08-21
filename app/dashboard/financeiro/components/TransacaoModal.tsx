@@ -51,6 +51,7 @@ export function TransacaoModal({ modo, transacao, onClose, onSuccess }: Props) {
     tipo: transacao.tipo,
     valor: transacao.valor,
     categoria: transacao.categoria,
+    status: transacao.status || 'PENDENTE',
     faccaoId: transacao.faccaoId || transacao.faccao?.id || '',
     dataVencimento: transacao.dataVencimento ? new Date(transacao.dataVencimento).toISOString().split('T')[0] : '',
     formaPagamento: transacao.formaPagamento || '',
@@ -119,10 +120,25 @@ export function TransacaoModal({ modo, transacao, onClose, onSuccess }: Props) {
               name="categoria" 
               required
               defaultValue={defaultValues.categoria}
-              placeholder="Ex: Pagamento Facção, Recebimento Cliente..."
+              placeholder="Ex: Pagamento facção"
               className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 text-gray-900 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
             />
           </div>
+
+          {modo === 'editar' && (
+            <div className="space-y-1.5">
+              <label className="text-sm font-semibold text-gray-700">Status</label>
+              <select 
+                name="status" 
+                defaultValue={defaultValues.status}
+                className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 text-gray-900 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none font-medium transition-all"
+              >
+                <option value="PENDENTE">Pendente</option>
+                <option value="PAGO">Pago</option>
+                <option value="ATRASADO">Atrasado</option>
+              </select>
+            </div>
+          )}
 
           <div className="space-y-1.5">
             <label className="text-sm font-semibold text-gray-700">Vínculo com Facção (Opcional)</label>

@@ -97,8 +97,11 @@ export default function FinanceiroPage() {
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-gray-100 bg-gray-50/80">
-                {['Facção', 'Categoria', 'Descrição', 'Valor', 'Vencimento', 'Status', ''].map((h) => (
-                  <th key={h} className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide whitespace-nowrap">
+                {['Facção', 'Categoria', 'Descrição', 'Valor', 'Vencimento', 'Status', ''].map((h, i) => (
+                  <th key={h} className={`px-2 sm:px-4 py-3 text-left text-[10px] sm:text-xs font-semibold text-gray-500 uppercase tracking-wide whitespace-nowrap ${
+                    h === 'Categoria' ? 'hidden lg:table-cell' : 
+                    h === 'Descrição' ? 'hidden md:table-cell' : ''
+                  }`}>
                     {h}
                   </th>
                 ))}
@@ -106,22 +109,22 @@ export default function FinanceiroPage() {
             </thead>
             <tbody className="divide-y divide-gray-50">
               {data.map((t) => (
-                <tr key={t.id} className="hover:bg-gray-50/60 transition-colors group">
-                  <td className="px-4 py-3.5 font-medium text-gray-900 whitespace-nowrap">
+                <tr key={t.id} className="hover:bg-gray-50/60 transition-colors group text-xs sm:text-sm">
+                  <td className="px-2 sm:px-4 py-3 font-medium text-gray-900 whitespace-nowrap max-w-[120px] truncate">
                     {t.faccao?.nome ? (
-                      <div className="flex items-center gap-1.5"><Factory className="w-3.5 h-3.5 text-gray-400"/> {t.faccao.nome}</div>
+                      <div className="flex items-center gap-1.5"><Factory className="w-3.5 h-3.5 text-gray-400 shrink-0"/> <span className="truncate">{t.faccao.nome}</span></div>
                     ) : '—'}
                   </td>
-                  <td className="hidden lg:table-cell px-4 py-3.5 text-gray-700 whitespace-nowrap">{t.categoria}</td>
-                  <td className="hidden md:table-cell px-4 py-3.5 text-gray-500 truncate max-w-[200px]">{t.descricao || '—'}</td>
-                  <td className="px-4 py-3.5 font-bold whitespace-nowrap" style={{ color: t.tipo === 'ENTRADA' ? '#16a34a' : '#dc2626' }}>
+                  <td className="hidden lg:table-cell px-4 py-3 text-gray-700 whitespace-nowrap">{t.categoria}</td>
+                  <td className="hidden md:table-cell px-4 py-3 text-gray-500 truncate max-w-[200px]">{t.descricao || '—'}</td>
+                  <td className="px-2 sm:px-4 py-3 font-bold whitespace-nowrap" style={{ color: t.tipo === 'ENTRADA' ? '#16a34a' : '#dc2626' }}>
                     {formatCurrency(Number(t.valor))}
                   </td>
-                  <td className="px-4 py-3.5 text-gray-600 whitespace-nowrap">
-                    {new Date(t.dataVencimento).toLocaleDateString('pt-BR')}
+                  <td className="px-2 sm:px-4 py-3 text-gray-600 whitespace-nowrap">
+                    {new Date(t.dataVencimento).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: '2-digit' })}
                   </td>
-                  <td className="px-4 py-3.5 whitespace-nowrap">
-                    <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold ${
+                  <td className="px-2 sm:px-4 py-3 whitespace-nowrap">
+                    <span className={`inline-flex items-center justify-center px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full text-[10px] sm:text-xs font-bold ${
                       t.status === 'PAGO' ? 'bg-green-100 text-green-700' :
                       t.status === 'ATRASADO' ? 'bg-red-100 text-red-700' :
                       'bg-amber-100 text-amber-700'
@@ -129,28 +132,28 @@ export default function FinanceiroPage() {
                       {t.status}
                     </span>
                   </td>
-                  <td className="px-2 sm:px-4 py-3.5">
-                    <div className="flex items-center justify-end gap-1 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
+                  <td className="px-1 sm:px-4 py-3 w-[1%]">
+                    <div className="flex items-center justify-end gap-0.5 sm:gap-1 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
                       {t.status !== 'PAGO' && (
                         <button
                           onClick={() => handleMarcarComoPago(t.id)}
                           disabled={isPending}
-                          className="text-gray-400 hover:text-green-600 transition-colors p-1.5 sm:p-2 rounded-lg hover:bg-green-50"
+                          className="text-gray-400 hover:text-green-600 transition-colors p-1.5 rounded-lg hover:bg-green-50"
                           title="Marcar como Pago"
                         >
-                          <CheckCircle2 className="w-5 h-5" />
+                          <CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5" />
                         </button>
                       )}
                       <button
                         onClick={() => { setModalModo('editar'); setTransacaoEditando(t); setModalAberto(true); }}
-                        className="text-gray-400 hover:text-blue-600 transition-colors p-1.5 sm:p-2 rounded-lg hover:bg-blue-50"
+                        className="text-gray-400 hover:text-blue-600 transition-colors p-1.5 rounded-lg hover:bg-blue-50"
                         title="Editar"
                       >
                         <Pencil className="w-4 h-4" />
                       </button>
                       <button
                         onClick={() => setDeleteModal({ aberto: true, id: t.id })}
-                        className="text-gray-400 hover:text-red-600 transition-colors p-1.5 sm:p-2 rounded-lg hover:bg-red-50"
+                        className="text-gray-400 hover:text-red-600 transition-colors p-1.5 rounded-lg hover:bg-red-50"
                         title="Excluir"
                       >
                         <Trash2 className="w-4 h-4" />

@@ -94,12 +94,21 @@ export async function createTransacao(formData: FormData) {
   }
 
   const faccaoId = faccaoIdStr ? parseInt(faccaoIdStr) : null;
-  const dataVencimento = new Date(dataVencimentoStr);
+  
+  // Evitar problema de timezone ao criar data via string ISO "YYYY-MM-DD"
+  const [year, month, day] = dataVencimentoStr.split('-').map(Number);
+  const dataVencimento = new Date(year, month - 1, day);
+  dataVencimento.setHours(12, 0, 0, 0); // Define meio-dia para garantir segurança de fuso
 
   let status: StatusTransacao = 'PENDENTE';
   const today = new Date();
   today.setHours(0,0,0,0);
-  if (dataVencimento < today) {
+  
+  // Zera a hora do vencimento para comparar apenas a data
+  const vencimentoDate = new Date(dataVencimento);
+  vencimentoDate.setHours(0,0,0,0);
+
+  if (vencimentoDate < today) {
     status = 'ATRASADO';
   }
 
@@ -138,6 +147,7 @@ export async function updateTransacao(id: number, formData: FormData) {
   const dataVencimentoStr = formData.get('dataVencimento') as string;
   const formaPagamento = formData.get('formaPagamento') as string;
   const faccaoIdStr = formData.get('faccaoId') as string;
+  const statusInput = formData.get('status') as StatusTransacao | null;
   
   const valor = parseFloat(valorStr);
 
@@ -146,7 +156,11 @@ export async function updateTransacao(id: number, formData: FormData) {
   }
 
   const faccaoId = faccaoIdStr ? parseInt(faccaoIdStr) : null;
-  const dataVencimento = new Date(dataVencimentoStr);
+  
+  // Evitar problema de timezone (usando 12h do dia local)
+  const [year, month, day] = dataVencimentoStr.split('-').map(Number);
+  const dataVencimento = new Date(year, month - 1, day);
+  dataVencimento.setHours(12, 0, 0, 0);
 
   const transacao = await prisma.transacaoFinanceira.findFirst({
     where: { id, userId },
@@ -157,11 +171,32 @@ export async function updateTransacao(id: number, formData: FormData) {
   }
 
   let status = transacao.status;
-  if (status !== 'PAGO') {
-    const today = new Date();
-    today.setHours(0,0,0,0);
-    status = dataVencimento < today ? 'ATRASADO' : 'PENDENTE';
+  
+  if (statusInput) {
+    // Se o formulário enviou um status explicitamente (modo editar), respeita ele
+    status = statusInput;
+    // Porem, se ele botou PENDENTE ou ATRASADO, a gente recalcula pra ele nao burlar se estiver atrasado
+    if (status !== 'PAGO') {
+      const today = new Date();
+      today.setHours(0,0,0,0);
+      const venc = new Date(dataVencimento);
+      venc.setHours(0,0,0,0);
+      status = venc < today ? 'ATRASADO' : 'PENDENTE';
+    }
+  } else {
+    if (status !== 'PAGO') {
+      const today = new Date();
+      today.setHours(0,0,0,0);
+      const venc = new Date(dataVencimento);
+      venc.setHours(0,0,0,0);
+      status = venc < today ? 'ATRASADO' : 'PENDENTE';
+    }
   }
+
+  // Se marcar como pago pelo modal e não tinha data, coloca data atual
+  const dataPagamento = (status === 'PAGO' && !transacao.dataPagamento) ? new Date() : transacao.dataPagamento;
+  // Se tirou de pago, remove a dataPagamento
+  const finalDataPagamento = status === 'PAGO' ? dataPagamento : null;
 
   try {
     await prisma.transacaoFinanceira.update({
@@ -173,6 +208,7 @@ export async function updateTransacao(id: number, formData: FormData) {
         valor,
         dataVencimento,
         status,
+        dataPagamento: finalDataPagamento,
         formaPagamento: formaPagamento || null,
         faccaoId
       },
