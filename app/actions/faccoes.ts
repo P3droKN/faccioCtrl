@@ -28,7 +28,10 @@ export async function getFaccoes() {
     orderBy: { createdAt: 'desc' },
     include: {
       _count: {
-        select: { ordens: true },
+        select: { 
+          ordens: true,
+          transacoes: true
+        },
       },
     },
   });
@@ -125,7 +128,10 @@ export async function deleteFaccao(id: number) {
     where: { id, userId },
     include: {
       _count: {
-        select: { ordens: true },
+        select: { 
+          ordens: true,
+          transacoes: true
+        },
       },
     },
   });
@@ -134,7 +140,7 @@ export async function deleteFaccao(id: number) {
     return { error: 'Facção não encontrada.' };
   }
 
-  if (faccao._count.ordens > 0) {
+  if (faccao._count.ordens > 0 || faccao._count.transacoes > 0) {
     // Ao invés de excluir, desativa
     try {
       await prisma.faccao.update({
@@ -144,7 +150,7 @@ export async function deleteFaccao(id: number) {
       revalidatePath('/dashboard/faccoes');
       return { 
         success: true, 
-        message: 'A facção possui ordens vinculadas, portanto foi inativada ao invés de excluída.' 
+        message: 'A facção possui ordens ou transações vinculadas, portanto foi inativada ao invés de excluída.' 
       };
     } catch (err) {
       console.error('Erro ao inativar facção:', err);
@@ -152,7 +158,7 @@ export async function deleteFaccao(id: number) {
     }
   }
 
-  // Sem ordens, pode excluir
+  // Sem ordens ou transações, pode excluir
   try {
     await prisma.faccao.delete({
       where: { id },

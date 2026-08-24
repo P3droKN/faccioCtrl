@@ -12,7 +12,7 @@ interface Faccao {
   nome: string;
   contato: string | null;
   ativo: boolean;
-  _count?: { ordens: number };
+  _count?: { ordens: number; transacoes: number };
 }
 
 export default function FaccoesPage() {
@@ -60,7 +60,7 @@ export default function FaccoesPage() {
   }
 
   function handleExcluirOuDesativar(faccao: Faccao) {
-    const isExcluir = faccao._count?.ordens === 0;
+    const isExcluir = faccao._count?.ordens === 0 && faccao._count?.transacoes === 0;
     const acaoTexto = isExcluir ? 'excluir' : 'inativar';
     
     if (!confirm(`Tem certeza que deseja ${acaoTexto} a facção ${faccao.nome}?`)) return;
@@ -148,65 +148,68 @@ export default function FaccoesPage() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-50">
-                {faccoes.map((f) => (
-                  <tr key={f.id} className={`hover:bg-gray-50/60 transition-colors group ${!f.ativo ? 'opacity-60' : ''}`}>
-                    <td className="px-4 py-3.5 font-bold text-gray-900 whitespace-nowrap">
-                      {f.codigo}
-                    </td>
-                    <td className="px-4 py-3.5 text-gray-700 font-medium whitespace-nowrap">
-                      <div className="flex items-center gap-2">
-                        <Factory className="w-4 h-4 text-gray-400" />
-                        {f.nome}
-                      </div>
-                    </td>
-                    <td className="px-4 py-3.5 text-gray-500 whitespace-nowrap">
-                      {f.contato || '—'}
-                    </td>
-                    <td className="px-4 py-3.5 whitespace-nowrap">
-                      <span
-                        className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold ${
-                          f.ativo ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600'
-                        }`}
-                      >
-                        <span className={`w-1.5 h-1.5 rounded-full ${f.ativo ? 'bg-green-500' : 'bg-gray-400'}`} />
-                        {f.ativo ? 'Ativa' : 'Inativa'}
-                      </span>
-                    </td>
-                    <td className="px-4 py-3.5 text-gray-500 whitespace-nowrap">
-                      {f._count?.ordens} OP{f._count?.ordens !== 1 ? 's' : ''}
-                    </td>
-                    <td className="px-2 sm:px-4 py-3.5">
-                      <div className="flex items-center justify-end gap-1 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
-                        <button
-                          onClick={() => abrirModalEditar(f)}
-                          className="p-2 rounded-lg text-gray-400 hover:text-blue-600 hover:bg-blue-50 transition-colors"
-                          title="Editar"
-                        >
-                          <Pencil className="w-4 h-4" />
-                        </button>
-                        
-                        <button
-                          onClick={() => handleExcluirOuDesativar(f)}
-                          disabled={actionId === f.id}
-                          className={`p-2 rounded-lg transition-colors ${
-                            f._count?.ordens === 0
-                              ? 'text-gray-400 hover:text-red-600 hover:bg-red-50'
-                              : 'text-gray-400 hover:text-amber-600 hover:bg-amber-50'
+                {faccoes.map((f) => {
+                  const isExcluir = f._count?.ordens === 0 && f._count?.transacoes === 0;
+                  return (
+                    <tr key={f.id} className={`hover:bg-gray-50/60 transition-colors group ${!f.ativo ? 'opacity-60' : ''}`}>
+                      <td className="px-4 py-3.5 font-bold text-gray-900 whitespace-nowrap">
+                        {f.codigo}
+                      </td>
+                      <td className="px-4 py-3.5 text-gray-700 font-medium whitespace-nowrap">
+                        <div className="flex items-center gap-2">
+                          <Factory className="w-4 h-4 text-gray-400" />
+                          {f.nome}
+                        </div>
+                      </td>
+                      <td className="px-4 py-3.5 text-gray-500 whitespace-nowrap">
+                        {f.contato || '—'}
+                      </td>
+                      <td className="px-4 py-3.5 whitespace-nowrap">
+                        <span
+                          className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold ${
+                            f.ativo ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600'
                           }`}
-                          title={f._count?.ordens === 0 ? 'Excluir Facção' : 'Inativar Facção'}
                         >
-                          {actionId === f.id ? (
-                            <Loader2 className="w-4 h-4 animate-spin" />
-                          ) : f._count?.ordens === 0 ? (
-                            <Trash2 className="w-4 h-4" />
-                          ) : (
-                            <PowerOff className="w-4 h-4" />
-                          )}
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
+                          <span className={`w-1.5 h-1.5 rounded-full ${f.ativo ? 'bg-green-500' : 'bg-gray-400'}`} />
+                          {f.ativo ? 'Ativa' : 'Inativa'}
+                        </span>
+                      </td>
+                      <td className="px-4 py-3.5 text-gray-500 whitespace-nowrap">
+                        {f._count?.ordens} OP{f._count?.ordens !== 1 ? 's' : ''}
+                      </td>
+                      <td className="px-2 sm:px-4 py-3.5">
+                        <div className="flex items-center justify-end gap-1 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
+                          <button
+                            onClick={() => abrirModalEditar(f)}
+                            className="p-2 rounded-lg text-gray-400 hover:text-blue-600 hover:bg-blue-50 transition-colors"
+                            title="Editar"
+                          >
+                            <Pencil className="w-4 h-4" />
+                          </button>
+                          
+                          <button
+                            onClick={() => handleExcluirOuDesativar(f)}
+                            disabled={actionId === f.id}
+                            className={`p-2 rounded-lg transition-colors ${
+                              isExcluir
+                                ? 'text-gray-400 hover:text-red-600 hover:bg-red-50'
+                                : 'text-gray-400 hover:text-amber-600 hover:bg-amber-50'
+                            }`}
+                            title={isExcluir ? 'Excluir Facção' : 'Inativar Facção'}
+                          >
+                            {actionId === f.id ? (
+                              <Loader2 className="w-4 h-4 animate-spin" />
+                            ) : isExcluir ? (
+                              <Trash2 className="w-4 h-4" />
+                            ) : (
+                              <PowerOff className="w-4 h-4" />
+                            )}
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>
