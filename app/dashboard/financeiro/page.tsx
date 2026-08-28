@@ -85,7 +85,7 @@ export default function FinanceiroPage() {
   const aPagar = transacoes.filter(t => t.tipo === 'SAIDA');
   const aReceber = transacoes.filter(t => t.tipo === 'ENTRADA');
 
-  const renderTable = (data: Transacao[], type: 'ENTRADA'|'SAIDA') => (
+  const renderTable = (data: Transacao[], type: 'ENTRADA'|'SAIDA'|'TODAS') => (
     <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
       {data.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-16 px-6 text-center text-gray-500">
@@ -219,31 +219,33 @@ export default function FinanceiroPage() {
       ) : (
         <>
           {activeTab === 'VISAO_GERAL' && (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm flex flex-col gap-2">
-                <div className="flex items-center gap-2 text-gray-500 font-medium text-sm">
-                  <TrendingDown className="w-5 h-5 text-red-500" /> Total de Saídas
+            <>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm flex flex-col gap-2">
+                  <div className="flex items-center gap-2 text-gray-500 font-medium text-sm">
+                    <TrendingDown className="w-5 h-5 text-red-500" /> Total de Saídas
+                  </div>
+                  <div className="text-3xl font-extrabold text-gray-900">{formatCurrency(resumo.totalPagar)}</div>
                 </div>
-                <div className="text-3xl font-extrabold text-gray-900">{formatCurrency(resumo.totalPagar)}</div>
-              </div>
-              <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm flex flex-col gap-2">
-                <div className="flex items-center gap-2 text-gray-500 font-medium text-sm">
-                  <TrendingUp className="w-5 h-5 text-green-500" /> Total de Entradas
+                <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm flex flex-col gap-2">
+                  <div className="flex items-center gap-2 text-gray-500 font-medium text-sm">
+                    <TrendingUp className="w-5 h-5 text-green-500" /> Total de Entradas
+                  </div>
+                  <div className="text-3xl font-extrabold text-gray-900">{formatCurrency(resumo.totalReceber)}</div>
                 </div>
-                <div className="text-3xl font-extrabold text-gray-900">{formatCurrency(resumo.totalReceber)}</div>
-              </div>
-              <div className="bg-[#1F3864] p-6 rounded-2xl shadow-lg shadow-blue-900/10 flex flex-col gap-2">
-                <div className="flex items-center gap-2 text-blue-100 font-medium text-sm">
-                  <DollarSign className="w-5 h-5" /> Saldo Geral
+                <div className="bg-[#1F3864] p-6 rounded-2xl shadow-lg shadow-blue-900/10 flex flex-col gap-2">
+                  <div className="flex items-center gap-2 text-blue-100 font-medium text-sm">
+                    <DollarSign className="w-5 h-5" /> Saldo Geral
+                  </div>
+                  <div className="text-3xl font-extrabold text-white">{formatCurrency(resumo.saldoPrevisto)}</div>
                 </div>
-                <div className="text-3xl font-extrabold text-white">{formatCurrency(resumo.saldoPrevisto)}</div>
               </div>
-            </div>
 
-            <div className="mt-8">
-              <h2 className="text-lg font-bold text-gray-900 mb-4">Todos os Lançamentos</h2>
-              {renderTable(transacoes, 'TODAS' as any)}
-            </div>
+              <div className="mt-8">
+                <h2 className="text-lg font-bold text-gray-900 mb-4">Todos os Lançamentos</h2>
+                {renderTable(transacoes, 'TODAS' as any)}
+              </div>
+            </>
           )}
 
           {activeTab === 'A_PAGAR' && renderTable(aPagar, 'SAIDA')}
