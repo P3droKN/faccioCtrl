@@ -59,14 +59,10 @@ export async function getResumoFinanceiro() {
   transacoes.forEach(t => {
     const val = Number(t.valor);
     if (t.tipo === 'ENTRADA') {
-      if (t.status === 'PENDENTE' || t.status === 'ATRASADO') {
-        totalReceber += val;
-      }
+      totalReceber += val;
       saldoPrevisto += val;
     } else {
-      if (t.status === 'PENDENTE' || t.status === 'ATRASADO') {
-        totalPagar += val;
-      }
+      totalPagar += val;
       saldoPrevisto -= val;
     }
   });

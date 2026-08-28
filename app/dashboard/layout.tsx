@@ -184,6 +184,10 @@ export default async function DashboardLayout({ children }: { children: React.Re
             <LayoutDashboard className="w-5 h-5 mb-1" />
             <span className="text-[10px] font-medium">Início</span>
           </Link>
+          <Link href="/dashboard/desempenho" className="flex flex-col items-center justify-center p-2 text-gray-500 hover:text-[#1F3864]">
+            <TrendingUp className="w-5 h-5 mb-1" />
+            <span className="text-[10px] font-medium">Desempenho</span>
+          </Link>
           <Link href="/dashboard/faccoes" className="flex flex-col items-center justify-center p-2 text-gray-500 hover:text-[#1F3864]">
             <Factory className="w-5 h-5 mb-1" />
             <span className="text-[10px] font-medium">Facções</span>
