@@ -67,7 +67,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
   return (
     <div className="min-h-screen bg-gray-50 text-gray-900 font-sans flex flex-col">
       {/* Topbar */}
-      <header className="sticky top-0 z-30 h-16 px-6 flex items-center justify-between border-b border-gray-200 bg-white shadow-sm">
+      <header className="sticky top-0 z-30 h-16 px-6 flex items-center justify-between border-b border-gray-200 bg-white shadow-sm print:hidden">
         <Link href="/dashboard" className="flex items-center gap-2 font-extrabold text-xl text-[#1F3864]">
           <div className="w-8 h-8 bg-[#1F3864] rounded-lg flex items-center justify-center">
             <Scissors className="w-4 h-4 text-white" />
@@ -150,14 +150,14 @@ export default async function DashboardLayout({ children }: { children: React.Re
 
       {/* Banner de Configuração Expressa */}
       {showExpressBanner && (
-        <div className="bg-blue-600 text-white px-4 py-2 text-center text-sm font-medium shadow-sm flex items-center justify-center gap-2 animate-pulse">
+        <div className="bg-blue-600 text-white px-4 py-2 text-center text-sm font-medium shadow-sm flex items-center justify-center gap-2 animate-pulse print:hidden">
           <span>🚀</span> {expressBannerMessage}
         </div>
       )}
 
       {/* Banner de Mentoria 30 Dias */}
       {showMentoriaBanner && (
-        <div className="bg-green-600 text-white px-4 py-3 text-center text-sm font-medium shadow-sm flex flex-col sm:flex-row items-center justify-center gap-3">
+        <div className="bg-green-600 text-white px-4 py-3 text-center text-sm font-medium shadow-sm flex flex-col sm:flex-row items-center justify-center gap-3 print:hidden">
           <div className="flex items-center gap-2">
             <span>🎓</span> Sua Mentoria de 30 Dias está ativa — check-in {mentoriaCheckins} de 4 realizados.
           </div>
@@ -173,13 +173,13 @@ export default async function DashboardLayout({ children }: { children: React.Re
       )}
 
       {/* Page content */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-10 pb-24 md:pb-10">
+      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-10 pb-24 md:pb-10 print:py-0 print:px-0 print:max-w-none">
         {isPro ? children : <SubscriptionGate initialStatus={session.plano} />}
       </main>
 
       {/* Mobile Bottom Navigation */}
       {isPro && (
-        <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-40 flex justify-around items-center h-16 px-2 safe-area-pb shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
+        <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-40 flex justify-around items-center h-16 px-2 safe-area-pb shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] print:hidden">
           <Link href="/dashboard" className="flex flex-col items-center justify-center p-2 text-gray-500 hover:text-[#1F3864]">
             <LayoutDashboard className="w-5 h-5 mb-1" />
             <span className="text-[10px] font-medium">Início</span>

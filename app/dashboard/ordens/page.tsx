@@ -11,6 +11,7 @@ import {
   Pencil,
   Scissors,
   Trash2,
+  Printer,
 } from 'lucide-react';
 import Link from 'next/link';
 import { getOrdens, getFaccoesOptions, deleteOrdem } from '@/app/actions/ordens';
@@ -276,6 +277,14 @@ export default function OrdensPage() {
                     </td>
                     <td className="px-2 sm:px-4 py-3.5">
                       <div className="flex items-center justify-end gap-1 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
+                        <Link
+                          href={`/dashboard/ordens/${o.id}/imprimir`}
+                          target="_blank"
+                          className="p-1.5 sm:p-2 rounded-lg text-gray-400 hover:text-[#1F3864] hover:bg-blue-50 transition-colors"
+                          title="Imprimir Ficha"
+                        >
+                          <Printer className="w-4 h-4" />
+                        </Link>
                         <button
                           onClick={() => abrirModalEditar(o)}
                           className="p-1.5 sm:p-2 rounded-lg text-gray-400 hover:text-blue-600 hover:bg-blue-50 transition-colors"

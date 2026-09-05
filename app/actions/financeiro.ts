@@ -20,11 +20,24 @@ async function getUserIdFromSession(): Promise<number> {
 
 // ─── Listagem ─────────────────────────────────────────────────────────────────
 
-export async function getTransacoes() {
+export async function getTransacoes(params?: { month?: number; year?: number }) {
   const userId = await getUserIdFromSession();
 
+  let dateFilter = {};
+  if (params?.month && params?.year) {
+    // month is 1-indexed (1 = January)
+    const startDate = new Date(params.year, params.month - 1, 1);
+    const endDate = new Date(params.year, params.month, 0, 23, 59, 59, 999);
+    dateFilter = {
+      dataVencimento: {
+        gte: startDate,
+        lte: endDate,
+      }
+    };
+  }
+
   const transacoes = await prisma.transacaoFinanceira.findMany({
-    where: { userId },
+    where: { userId, ...dateFilter },
     orderBy: { dataVencimento: 'asc' },
     include: {
       faccao: {
@@ -39,17 +52,23 @@ export async function getTransacoes() {
   return transacoes;
 }
 
-export async function getResumoFinanceiro() {
+export async function getResumoFinanceiro(params?: { month?: number; year?: number }) {
   const userId = await getUserIdFromSession();
 
-  // Basic implementation to sum ENTRADA vs SAIDA pending next 30 days, etc.
-  const now = new Date();
-  now.setHours(0,0,0,0);
-  const in30Days = new Date();
-  in30Days.setDate(now.getDate() + 30);
+  let dateFilter = {};
+  if (params?.month && params?.year) {
+    const startDate = new Date(params.year, params.month - 1, 1);
+    const endDate = new Date(params.year, params.month, 0, 23, 59, 59, 999);
+    dateFilter = {
+      dataVencimento: {
+        gte: startDate,
+        lte: endDate,
+      }
+    };
+  }
 
   const transacoes = await prisma.transacaoFinanceira.findMany({
-    where: { userId }
+    where: { userId, ...dateFilter }
   });
 
   let totalReceber = 0;

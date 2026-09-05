@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback, useTransition } from 'react';
-import { Plus, DollarSign, TrendingUp, TrendingDown, CheckCircle2, Wallet, Factory, ChevronLeft, Pencil, Trash2 } from 'lucide-react';
+import { Plus, DollarSign, TrendingUp, TrendingDown, CheckCircle2, Wallet, Factory, ChevronLeft, Pencil, Trash2, Printer } from 'lucide-react';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { getTransacoes, getResumoFinanceiro, marcarComoPago, deleteTransacao } from '@/app/actions/financeiro';
@@ -24,12 +24,22 @@ interface Transacao {
   faccao?: { nome: string } | null;
 }
 
+const MESES = [
+  { value: 1, label: 'Janeiro' }, { value: 2, label: 'Fevereiro' }, { value: 3, label: 'Março' },
+  { value: 4, label: 'Abril' }, { value: 5, label: 'Maio' }, { value: 6, label: 'Junho' },
+  { value: 7, label: 'Julho' }, { value: 8, label: 'Agosto' }, { value: 9, label: 'Setembro' },
+  { value: 10, label: 'Outubro' }, { value: 11, label: 'Novembro' }, { value: 12, label: 'Dezembro' }
+];
+
 export default function FinanceiroPage() {
   const [activeTab, setActiveTab] = useState<'VISAO_GERAL' | 'A_PAGAR' | 'A_RECEBER'>('VISAO_GERAL');
   const [transacoes, setTransacoes] = useState<Transacao[]>([]);
   const [resumo, setResumo] = useState({ totalReceber: 0, totalPagar: 0, saldoPrevisto: 0 });
   const [loading, setLoading] = useState(true);
   
+  const [filtroMes, setFiltroMes] = useState(new Date().getMonth() + 1);
+  const [filtroAno, setFiltroAno] = useState(new Date().getFullYear());
+
   const [modalAberto, setModalAberto] = useState(false);
   const [modalModo, setModalModo] = useState<'criar' | 'editar'>('criar');
   const [transacaoEditando, setTransacaoEditando] = useState<Transacao | undefined>();
@@ -40,16 +50,17 @@ export default function FinanceiroPage() {
   const fetchData = useCallback(async () => {
     setLoading(true);
     try {
+      const params = { month: filtroMes, year: filtroAno };
       const [resTransacoes, resResumo] = await Promise.all([
-        getTransacoes(),
-        getResumoFinanceiro()
+        getTransacoes(params),
+        getResumoFinanceiro(params)
       ]);
       setTransacoes(resTransacoes as any);
       setResumo(resResumo);
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [filtroMes, filtroAno]);
 
   useEffect(() => {
     fetchData();
@@ -98,9 +109,10 @@ export default function FinanceiroPage() {
             <thead>
               <tr className="border-b border-gray-100 bg-gray-50/80">
                 {['Facção', 'Categoria', 'Descrição', 'Valor', 'Vencimento', 'Status', ''].map((h, i) => (
-                  <th key={h} className={`px-2 sm:px-4 py-3 text-left text-[10px] sm:text-xs font-semibold text-gray-500 uppercase tracking-wide whitespace-nowrap ${
+                  <th key={h + i} className={`px-2 sm:px-4 py-3 text-left text-[10px] sm:text-xs font-semibold text-gray-500 uppercase tracking-wide whitespace-nowrap ${
                     h === 'Categoria' ? 'hidden lg:table-cell' : 
-                    h === 'Descrição' ? 'hidden md:table-cell' : ''
+                    h === 'Descrição' ? 'hidden md:table-cell' : 
+                    h === '' ? 'print:hidden' : ''
                   }`}>
                     {h}
                   </th>
@@ -132,7 +144,7 @@ export default function FinanceiroPage() {
                       {t.status}
                     </span>
                   </td>
-                  <td className="px-1 sm:px-4 py-3 w-[1%]">
+                  <td className="px-1 sm:px-4 py-3 w-[1%] print:hidden">
                     <div className="flex items-center justify-end gap-0.5 sm:gap-1 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
                       {t.status !== 'PAGO' && (
                         <button
@@ -174,24 +186,56 @@ export default function FinanceiroPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <Link href="/dashboard" className="md:hidden inline-flex items-center gap-1 text-sm font-medium text-gray-500 hover:text-gray-900 mb-2 -ml-1 transition-colors">
+          <Link href="/dashboard" className="md:hidden inline-flex items-center gap-1 text-sm font-medium text-gray-500 hover:text-gray-900 mb-2 -ml-1 transition-colors print:hidden">
             <ChevronLeft className="w-4 h-4" />
             Voltar
           </Link>
           <h1 className="text-2xl font-bold text-gray-900">Financeiro</h1>
-          <p className="text-sm text-gray-500 mt-0.5">Controle de pagamentos e recebimentos</p>
+          <p className="text-sm text-gray-500 mt-0.5 print:hidden">Controle de pagamentos e recebimentos</p>
+          <p className="hidden print:block text-sm text-gray-500 mt-0.5">
+            Extrato Financeiro — {MESES.find(m => m.value === filtroMes)?.label} de {filtroAno}
+          </p>
         </div>
-        <button
-          onClick={() => { setModalModo('criar'); setTransacaoEditando(undefined); setModalAberto(true); }}
-          className="flex items-center gap-2 px-5 py-2.5 bg-[#1F3864] hover:bg-blue-800 text-white text-sm font-bold rounded-xl transition-all shadow-lg shadow-blue-900/20 hover:-translate-y-0.5"
-        >
-          <Plus className="w-4 h-4" />
-          Novo Lançamento
-        </button>
+        <div className="flex items-center gap-3 print:hidden">
+          <div className="flex items-center gap-2 bg-white border border-gray-200 rounded-xl px-3 py-1.5 shadow-sm">
+            <select 
+              value={filtroMes} 
+              onChange={(e) => setFiltroMes(Number(e.target.value))}
+              className="bg-transparent text-sm font-medium text-gray-700 outline-none"
+            >
+              {MESES.map(m => <option key={m.value} value={m.value}>{m.label}</option>)}
+            </select>
+            <span className="text-gray-300">/</span>
+            <select
+              value={filtroAno}
+              onChange={(e) => setFiltroAno(Number(e.target.value))}
+              className="bg-transparent text-sm font-medium text-gray-700 outline-none"
+            >
+              {[0, 1, 2, 3].map(i => {
+                const year = new Date().getFullYear() - i;
+                return <option key={year} value={year}>{year}</option>;
+              })}
+            </select>
+          </div>
+          <button
+            onClick={() => window.print()}
+            className="hidden sm:flex items-center gap-2 px-4 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm font-bold rounded-xl transition-all shadow-sm"
+            title="Imprimir Extrato"
+          >
+            <Printer className="w-4 h-4" />
+          </button>
+          <button
+            onClick={() => { setModalModo('criar'); setTransacaoEditando(undefined); setModalAberto(true); }}
+            className="flex items-center gap-2 px-5 py-2.5 bg-[#1F3864] hover:bg-blue-800 text-white text-sm font-bold rounded-xl transition-all shadow-lg shadow-blue-900/20 hover:-translate-y-0.5"
+          >
+            <Plus className="w-4 h-4" />
+            Novo Lançamento
+          </button>
+        </div>
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-4 border-b border-gray-200">
+      <div className="flex gap-4 border-b border-gray-200 print:hidden">
         <button 
           onClick={() => setActiveTab('VISAO_GERAL')}
           className={`pb-3 font-semibold text-sm transition-colors border-b-2 ${activeTab === 'VISAO_GERAL' ? 'border-[#1F3864] text-[#1F3864]' : 'border-transparent text-gray-500 hover:text-gray-700'}`}
