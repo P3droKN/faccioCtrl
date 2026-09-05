@@ -131,28 +131,40 @@ export default function OrdensPage() {
       {/* Header da página */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <Link href="/dashboard" className="md:hidden inline-flex items-center gap-1 text-sm font-medium text-gray-500 hover:text-gray-900 mb-2 -ml-1 transition-colors">
+          <Link href="/dashboard" className="md:hidden inline-flex items-center gap-1 text-sm font-medium text-gray-500 hover:text-gray-900 mb-2 -ml-1 transition-colors print:hidden">
             <ChevronLeft className="w-4 h-4" />
             Voltar
           </Link>
           <h1 className="text-2xl font-bold text-gray-900">Ordens de Produção</h1>
-          <p className="text-sm text-gray-500 mt-0.5">
+          <p className="text-sm text-gray-500 mt-0.5 print:hidden">
             {totalCount === 0
               ? 'Nenhuma ordem cadastrada'
               : `${totalCount} ordem${totalCount !== 1 ? 's' : ''} encontrada${totalCount !== 1 ? 's' : ''}`}
           </p>
+          <p className="hidden print:block text-sm text-gray-500 mt-0.5">
+            Visão Geral das Operações
+          </p>
         </div>
-        <button
-          onClick={abrirModalCriar}
-          className="flex items-center gap-2 px-5 py-2.5 bg-[#1F3864] hover:bg-blue-800 text-white text-sm font-bold rounded-xl transition-all shadow-lg shadow-blue-900/20 hover:-translate-y-0.5"
-        >
-          <Plus className="w-4 h-4" />
-          Nova Ordem
-        </button>
+        <div className="flex items-center gap-3 print:hidden">
+          <button
+            onClick={() => window.print()}
+            className="hidden sm:flex items-center gap-2 px-4 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm font-bold rounded-xl transition-all shadow-sm"
+            title="Imprimir Tabela"
+          >
+            <Printer className="w-4 h-4" />
+          </button>
+          <button
+            onClick={abrirModalCriar}
+            className="flex items-center gap-2 px-5 py-2.5 bg-[#1F3864] hover:bg-blue-800 text-white text-sm font-bold rounded-xl transition-all shadow-lg shadow-blue-900/20 hover:-translate-y-0.5"
+          >
+            <Plus className="w-4 h-4" />
+            Nova Ordem
+          </button>
+        </div>
       </div>
 
       {/* Barra de filtros */}
-      <div className="flex flex-col sm:flex-row gap-3">
+      <div className="flex flex-col sm:flex-row gap-3 print:hidden">
         <div className="relative flex-1">
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
           <input
@@ -227,7 +239,7 @@ export default function OrdensPage() {
                   <th className="hidden sm:table-cell px-4 py-3 text-center text-xs font-semibold text-gray-500 uppercase tracking-wide whitespace-nowrap">Pendente</th>
                   <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide whitespace-nowrap">Status</th>
                   <th className="hidden xl:table-cell px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide whitespace-nowrap">Obs.</th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide whitespace-nowrap"></th>
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide whitespace-nowrap print:hidden"></th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-50">
@@ -275,7 +287,7 @@ export default function OrdensPage() {
                     <td className="hidden xl:table-cell px-4 py-3.5 text-gray-400 max-w-[140px] truncate" title={o.observacao ?? ''}>
                       {o.observacao || '—'}
                     </td>
-                    <td className="px-2 sm:px-4 py-3.5">
+                    <td className="px-2 sm:px-4 py-3.5 print:hidden">
                       <div className="flex items-center justify-end gap-1 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
                         <Link
                           href={`/dashboard/ordens/${o.id}/imprimir`}
@@ -311,7 +323,7 @@ export default function OrdensPage() {
 
       {/* Paginação */}
       {!loading && totalPages > 1 && (
-        <div className="flex items-center justify-between text-sm">
+        <div className="flex items-center justify-between text-sm print:hidden">
           <p className="text-gray-500">
             Página {currentPage} de {totalPages}
           </p>
