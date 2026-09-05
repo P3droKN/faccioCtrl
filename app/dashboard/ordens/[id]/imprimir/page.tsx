@@ -3,7 +3,6 @@ import { notFound, redirect } from 'next/navigation';
 import { cookies } from 'next/headers';
 import { decrypt } from '@/app/actions/auth';
 import PrintButton from './PrintButton';
-import { format } from 'date-fns';
 
 const prisma = new PrismaClient();
 
@@ -49,7 +48,7 @@ export default async function ImprimirOrdemPage(props: { params: Promise<{ id: s
         <div className="text-right">
           <h2 className="text-2xl font-bold text-gray-900">OP #{ordem.numeroOrdem}</h2>
           <p className="text-sm text-gray-500 mt-1">
-            Emitida em: {format(new Date(ordem.createdAt), 'dd/MM/yyyy')}
+            Emitida em: {new Date(ordem.createdAt).toLocaleDateString('pt-BR')}
           </p>
         </div>
       </div>
@@ -73,11 +72,11 @@ export default async function ImprimirOrdemPage(props: { params: Promise<{ id: s
           <div className="bg-gray-50 p-4 rounded-lg border border-gray-200 grid grid-cols-2 gap-4">
             <div>
               <p className="text-xs text-gray-500">Data de Envio</p>
-              <p className="font-semibold text-gray-900">{format(new Date(ordem.dataEnvio), 'dd/MM/yyyy')}</p>
+              <p className="font-semibold text-gray-900">{new Date(ordem.dataEnvio).toLocaleDateString('pt-BR')}</p>
             </div>
             <div>
               <p className="text-xs text-gray-500">Prazo Acordado</p>
-              <p className="font-semibold text-gray-900">{format(new Date(ordem.prazoAcordado), 'dd/MM/yyyy')}</p>
+              <p className="font-semibold text-gray-900">{new Date(ordem.prazoAcordado).toLocaleDateString('pt-BR')}</p>
             </div>
           </div>
         </div>
