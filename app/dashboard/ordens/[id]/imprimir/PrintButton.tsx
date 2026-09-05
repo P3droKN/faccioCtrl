@@ -1,4 +1,3 @@
-
 'use client';
 
 import { Printer } from 'lucide-react';
@@ -23,4 +22,3 @@ export default function PrintButton() {
     </button>
   );
 }
-
