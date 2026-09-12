@@ -133,7 +133,7 @@ export default function FinanceiroPage() {
                     {formatCurrency(Number(t.valor))}
                   </td>
                   <td className="px-2 sm:px-4 py-3 text-gray-600 whitespace-nowrap">
-                    {new Date(t.dataVencimento).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: '2-digit' })}
+                    {new Date(t.dataVencimento).toLocaleDateString('pt-BR', { timeZone: 'UTC', day: '2-digit', month: '2-digit', year: '2-digit' })}
                   </td>
                   <td className="px-2 sm:px-4 py-3 whitespace-nowrap">
                     <span className={`inline-flex items-center justify-center px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full text-[10px] sm:text-xs font-bold ${

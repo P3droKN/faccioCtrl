@@ -26,8 +26,8 @@ export async function getTransacoes(params?: { month?: number; year?: number }) 
   let dateFilter = {};
   if (params?.month && params?.year) {
     // month is 1-indexed (1 = January)
-    const startDate = new Date(params.year, params.month - 1, 1);
-    const endDate = new Date(params.year, params.month, 0, 23, 59, 59, 999);
+    const startDate = new Date(Date.UTC(params.year, params.month - 1, 1, 0, 0, 0, 0));
+    const endDate = new Date(Date.UTC(params.year, params.month, 0, 23, 59, 59, 999));
     dateFilter = {
       dataVencimento: {
         gte: startDate,
@@ -49,7 +49,32 @@ export async function getTransacoes(params?: { month?: number; year?: number }) 
     },
   });
 
-  return transacoes;
+  const today = new Date();
+  const todayDateOnly = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+  const idsToUpdate: number[] = [];
+
+  const transacoesTratadas = transacoes.map(t => {
+    let finalStatus = t.status;
+    if (finalStatus === 'PENDENTE') {
+      const venc = new Date(t.dataVencimento);
+      const vencDateOnly = new Date(venc.getUTCFullYear(), venc.getUTCMonth(), venc.getUTCDate());
+      if (vencDateOnly < todayDateOnly) {
+        finalStatus = 'ATRASADO';
+        idsToUpdate.push(t.id);
+      }
+    }
+    return { ...t, status: finalStatus };
+  });
+
+  if (idsToUpdate.length > 0) {
+    // self-healing db update async
+    prisma.transacaoFinanceira.updateMany({
+      where: { id: { in: idsToUpdate } },
+      data: { status: 'ATRASADO' }
+    }).catch(console.error);
+  }
+
+  return transacoesTratadas;
 }
 
 export async function getResumoFinanceiro(params?: { month?: number; year?: number }) {
@@ -57,8 +82,8 @@ export async function getResumoFinanceiro(params?: { month?: number; year?: numb
 
   let dateFilter = {};
   if (params?.month && params?.year) {
-    const startDate = new Date(params.year, params.month - 1, 1);
-    const endDate = new Date(params.year, params.month, 0, 23, 59, 59, 999);
+    const startDate = new Date(Date.UTC(params.year, params.month - 1, 1, 0, 0, 0, 0));
+    const endDate = new Date(Date.UTC(params.year, params.month, 0, 23, 59, 59, 999));
     dateFilter = {
       dataVencimento: {
         gte: startDate,

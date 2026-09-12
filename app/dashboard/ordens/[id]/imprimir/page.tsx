@@ -72,11 +72,11 @@ export default async function ImprimirOrdemPage(props: { params: Promise<{ id: s
           <div className="bg-gray-50 p-3 rounded-md border border-gray-200 grid grid-cols-2 gap-4">
             <div>
               <p className="text-[10px] text-gray-500">Data de Envio</p>
-              <p className="font-semibold text-sm text-gray-900">{new Date(ordem.dataEnvio).toLocaleDateString('pt-BR')}</p>
+              <p className="font-semibold text-sm text-gray-900">{new Date(ordem.dataEnvio).toLocaleDateString('pt-BR', { timeZone: 'UTC' })}</p>
             </div>
             <div>
               <p className="text-[10px] text-gray-500">Prazo Acordado</p>
-              <p className="font-semibold text-sm text-gray-900">{new Date(ordem.prazoAcordado).toLocaleDateString('pt-BR')}</p>
+              <p className="font-semibold text-sm text-gray-900">{new Date(ordem.prazoAcordado).toLocaleDateString('pt-BR', { timeZone: 'UTC' })}</p>
             </div>
           </div>
         </div>

@@ -258,7 +258,7 @@ export default function OrdensPage() {
                       </div>
                     </td>
                     <td className="hidden lg:table-cell px-4 py-3.5 text-gray-500 whitespace-nowrap">
-                      {new Date(o.dataEnvio).toLocaleDateString('pt-BR')}
+                      {new Date(o.dataEnvio).toLocaleDateString('pt-BR', { timeZone: 'UTC' })}
                     </td>
                     <td className="hidden sm:table-cell px-4 py-3.5 whitespace-nowrap">
                       <span
@@ -270,7 +270,7 @@ export default function OrdensPage() {
                             : 'text-gray-600'
                         }`}
                       >
-                        {new Date(o.prazoAcordado).toLocaleDateString('pt-BR')}
+                        {new Date(o.prazoAcordado).toLocaleDateString('pt-BR', { timeZone: 'UTC' })}
                       </span>
                     </td>
                     <td className="hidden md:table-cell px-4 py-3.5 text-gray-700 font-medium text-center">{o.qtdEnviada}</td>
