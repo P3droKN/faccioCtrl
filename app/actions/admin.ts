@@ -74,3 +74,35 @@ export async function getAdminData() {
     return { authorized: true, error: 'Erro ao buscar usuários.', users: [], totalUsers: 0, totalProUsers: 0 };
   }
 }
+
+export async function impersonateUser(userId: number) {
+  const cookieStore = await cookies();
+  const isAdmin = cookieStore.get(ADMIN_COOKIE_NAME)?.value === 'authenticated';
+
+  if (!isAdmin) {
+    return { error: 'Não autorizado.' };
+  }
+
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+    select: { id: true, email: true }
+  });
+
+  if (!user) {
+    return { error: 'Usuário não encontrado.' };
+  }
+
+  // Generate auth session (using the encrypt logic identical to auth.ts)
+  const { encrypt } = await import('./auth');
+  const session = await encrypt({ id: user.id, email: user.email });
+
+  cookieStore.set('session', session, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax',
+    maxAge: 60 * 60 * 24, // 24 horas
+    path: '/',
+  });
+
+  return { success: true };
+}

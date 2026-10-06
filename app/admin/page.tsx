@@ -1,8 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { ShieldAlert, Users, Crown, Download, Loader2, LogOut, Eye, EyeOff } from 'lucide-react';
-import { loginAdmin, getAdminData, logoutAdmin } from '@/app/actions/admin';
+import { ShieldAlert, Users, Crown, Download, Loader2, LogOut, Eye, EyeOff, LogIn } from 'lucide-react';
+import { loginAdmin, getAdminData, logoutAdmin, impersonateUser } from '@/app/actions/admin';
 
 type UserData = {
   id: number;
@@ -65,6 +65,18 @@ export default function AdminPage() {
     await logoutAdmin();
     setAuthorized(false);
     setUsers([]);
+  }
+
+  async function handleImpersonate(userId: number) {
+    if (!confirm('Você será logado na conta desse usuário para visualizar. Deseja continuar?')) return;
+    setLoading(true);
+    const res = await impersonateUser(userId);
+    if (res.success) {
+      window.location.href = '/dashboard';
+    } else {
+      alert('Erro ao acessar conta: ' + res.error);
+      setLoading(false);
+    }
   }
 
   function exportToCSV() {
@@ -219,6 +231,7 @@ export default function AdminPage() {
                   <th className="px-6 py-4">Plano</th>
                   <th className="px-6 py-4">Data Cadastro</th>
                   <th className="px-6 py-4">Último Acesso</th>
+                  <th className="px-6 py-4 text-right">Ações</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-50">
@@ -242,11 +255,21 @@ export default function AdminPage() {
                     <td className="px-6 py-4 text-gray-500 whitespace-nowrap">
                       {new Date(u.updatedAt).toLocaleDateString('pt-BR')}
                     </td>
+                    <td className="px-6 py-4 text-right whitespace-nowrap">
+                      <button
+                        onClick={() => handleImpersonate(u.id)}
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-700 text-xs font-bold rounded-lg transition-colors"
+                        title="Acessar conta para visualizar"
+                      >
+                        <LogIn className="w-3.5 h-3.5" />
+                        Acessar
+                      </button>
+                    </td>
                   </tr>
                 ))}
                 {users.length === 0 && (
                   <tr>
-                    <td colSpan={5} className="px-6 py-8 text-center text-gray-500">
+                    <td colSpan={6} className="px-6 py-8 text-center text-gray-500">
                       Nenhum usuário encontrado.
                     </td>
                   </tr>
